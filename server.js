@@ -8,9 +8,6 @@ const cors = require('cors')
 
 
 
-
-
-
 const app = express();
 dotenv.config();
 connectDB();
@@ -27,8 +24,19 @@ app.get("/api/notes", (req, res) => {
 })
 app.use("/api/users", userRoutes)
 
+//-------------------------------Deployment-----------------------------------------------
+
+// __dirname = path.resolve();
+// if (process.env.NODE_ENV === "production") {
+//   app.use()
+// } else {
+//   app.get("/", (req, res) => {
+//     res.send("API is running..")
+//   })
+// }
+
+//-------------------------------Deployment----------------------------------------------
 
 
-const PORT = process.env.PORT ;
-
+const PORT = process.env.PORT ||  4000;
 app.listen(PORT, console.log(`Sever started on port ${PORT}`))
