@@ -3,14 +3,14 @@ const Sub = require("../models/subModel");
 const generateToken = require("../utils/generateToken");
 
 const createSub = asyncHandler(async (req, res) => {
-  const { name, subRatePerMin, hasSubActiveSub, email } = req.body;
+  const { name, subRatePerMin, hasActiveSub, email } = req.body;
 
 
 
   const user = await Sub.create({
     name,
     subRatePerMin,
-    hasSubActiveSub,
+    hasActiveSub,
     email
   })
 
@@ -19,7 +19,7 @@ const createSub = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       subRatePerMin: user.subRatePerMin,
-      hasSubActiveSub: user.hasSubActiveSub,
+      hasActiveSub: user.hasActiveSub,
       email: user.email,
       createdAt: user.createdAt
     })
@@ -37,15 +37,9 @@ const createSub = asyncHandler(async (req, res) => {
 const getSub = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await Sub.findOne({ email });
+  const user = await Sub.find();
   if (user) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      subRatePerMin: user.subRatePerMin,
-      hasSubActiveSub: user.hasSubActiveSub,
-      createdAt: user.createdAt
-    })
+    res.json(user)
   } else {
     res.status(400)
     throw new Error("Invalid email or password !")

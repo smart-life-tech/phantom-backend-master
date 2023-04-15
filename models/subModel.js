@@ -9,7 +9,7 @@ const subSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    hasSubActiveSub: {
+    hasActiveSub: {
       type: Boolean,
       required: true,
     },
