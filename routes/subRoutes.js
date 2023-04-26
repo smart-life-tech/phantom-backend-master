@@ -403,13 +403,13 @@ try{
                 const {temperature,humidity,phVal} = await findUserReadings(data.MacAddress)
                 console.log({temperature,humidity,phVal})
                 if(temperature){
-                  Sub.findByIdAndUpdate(data._id,{
-                    hasActiveSub:active,
-                    // presentDate: nextFrequencyData,
-                    $inc: { noOfTransaction: 1, },
-                    nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
+                  // Sub.findByIdAndUpdate(data._id,{
+                  //   hasActiveSub:active,
+                  //   // presentDate: nextFrequencyData,
+                  //   $inc: { noOfTransaction: 1, },
+                  //   nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
                 
-                   }) 
+                  //  }) 
                   const result =await runBlockchainTransaction(data,temperature,humidity,phVal)
                 if(result === "completed") {
                     const totalDurationInMinutes =parseInt(data.startTime) + parseInt(data.endSub)
@@ -417,13 +417,13 @@ try{
                     let date = new Date();
                     let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
                     let active = currentTimeInMinutes > totalDurationInMinutes ? false : true
-                  //  Sub.findByIdAndUpdate(data._id,{
-                  //   hasActiveSub:active,
-                  //   // presentDate: nextFrequencyData,
-                  //   $inc: { noOfTransaction: 1, },
-                  //   nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
+                   Sub.findByIdAndUpdate(data._id,{
+                    hasActiveSub:active,
+                    // presentDate: nextFrequencyData,
+                    $inc: { noOfTransaction: 1, },
+                    nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
                 
-                  //  }) 
+                   }) 
                 } 
                 }else{
                   return
