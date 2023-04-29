@@ -47,7 +47,6 @@ try{
     
         let FDRLPubKey = new PublicKey(data.FDRL);
         let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo)
-        console.log({FDRLPubKey,FDRLTokenAccount},FDRLTokenAccount.toBase58())
          const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
          const mintInfo = await token.getMint(connection, FDRLPubKey);
         const user = await initializeKeypair(connection);
@@ -60,9 +59,9 @@ try{
             temperature * 10 ** mintInfo.decimals
           );
 
-          console.log(
-            `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
-          );
+          // console.log(
+          //   `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+          // );
               // metaplex setup
     const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(user))
@@ -91,11 +90,11 @@ try{
     image: imageUri,
   });
 
-  console.log("metadata uri:", uri);
+  // console.log("metadata uri:", uri);
 
   // get metadata account address
   const metadataPDA = await findMetadataPda(FDRLPubKey);
-  console.log(`GET METADATA ACCOUNT ADDRESS is : ${metadataPDA}`);
+  // console.log(`GET METADATA ACCOUNT ADDRESS is : ${metadataPDA}`);
 
   // onchain metadata format
   const tokenMetadata = {
@@ -107,10 +106,6 @@ try{
     collection: null,
     uses: null,
   };
-
-  console.log("=============================");
-  console.log("CREATING TRANSACTION");
-  console.log("=============================");
   // transaction to create metadata account
   const transaction = new web3.Transaction().add(
     createCreateMetadataAccountV2Instruction(
@@ -130,9 +125,6 @@ try{
     )
   );
 
-  console.log(`METADATA TRANSACTİON : ${transaction}`);
-  console.log("=============================");
-  console.log("BEGIN SEND AND CONFIRMTRANSACTION");
   // send transaction
   const transactionSignature2 = await web3.sendAndConfirmTransaction(
     connection,
@@ -140,10 +132,10 @@ try{
     [user]
   );
 
-  console.log(
-    `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
-  );
-  console.log("PublicKey:", user.publicKey.toBase58());
+  // console.log(
+  //   `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
+  // );
+  // console.log("PublicKey:", user.publicKey.toBase58());
 }catch(e){
     console.log({e})
 }
@@ -153,7 +145,6 @@ try{
     
         let HDRLPubKey = new PublicKey(data.HDRL);
         let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
-        console.log({HDRLPubKey,HDRLTokenAccount},HDRLTokenAccount.toBase58())
          const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
          const mintInfo = await token.getMint(connection, HDRLPubKey);
         const user = await initializeKeypair(connection);
@@ -166,9 +157,9 @@ try{
             parseInt(humidity) * 10 ** mintInfo.decimals
           );
 
-          console.log(
-            `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
-          );
+          // console.log(
+          //   `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+          // );
               // metaplex setup
     const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(user))
@@ -196,12 +187,10 @@ try{
         description: "for all workers of the world",
         image: imageUri,
       })
-  console.log("metadata uri:", uri);
+  // console.log("metadata uri:", uri);
 
   // get metadata account address
   const metadataPDA = await findMetadataPda(HDRLPubKey);
-  console.log(`GET METADATA ACCOUNT ADDRESS is : ${metadataPDA}`);
-
   // onchain metadata format
   const tokenMetadata = {
     name: "HUMIDITY Root Labs COIN",
@@ -212,10 +201,6 @@ try{
     collection: null,
     uses: null,
   };
-
-  console.log("=============================");
-  console.log("CREATING TRANSACTION");
-  console.log("=============================");
   // transaction to create metadata account
   const transaction = new web3.Transaction().add(
     createCreateMetadataAccountV2Instruction(
@@ -235,20 +220,12 @@ try{
     )
   );
 
-  console.log(`METADATA TRANSACTİON : ${transaction}`);
-  console.log("=============================");
-  console.log("BEGIN SEND AND CONFIRMTRANSACTION");
   // send transaction
   const transactionSignature2 = await web3.sendAndConfirmTransaction(
     connection,
     transaction,
     [user]
   );
-
-  console.log(
-    `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
-  );
-  console.log("PublicKey:", user.publicKey.toBase58());
 }catch(e){
     console.log({e})
 }
@@ -258,7 +235,6 @@ try{
     
         let PHRLPubKey = new PublicKey(data.PHRL);
         let PHRLTokenAccount = new PublicKey(data.PHRLAccountInfo)
-        console.log({PHRLPubKey,PHRLTokenAccount},PHRLTokenAccount.toBase58())
          const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
          const mintInfo = await token.getMint(connection, PHRLPubKey);
         const user = await initializeKeypair(connection);
@@ -269,10 +245,6 @@ try{
             PHRLTokenAccount,
             user, // Replace `user` with the receiver's public key
             parseInt(phVal) * 10 ** mintInfo.decimals
-          );
-
-          console.log(
-            `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
           );
               // metaplex setup
     const metaplex = Metaplex.make(connection)
@@ -293,7 +265,7 @@ try{
 
   // upload image and get image uri
   const imageUri = await metaplex.storage().upload(file);
-  console.log("image uri:", imageUri);
+  // console.log("image uri:", imageUri);
 
     // upload metadata and get metadata uri (off chain metadata)
     const { uri } = await metaplex.nfts().uploadMetadata({
@@ -302,11 +274,9 @@ try{
         image: imageUri,
       });
     
-  console.log("metadata uri:", uri);
 
   // get metadata account address
   const metadataPDA = await findMetadataPda(PHRLPubKey);
-  console.log(`GET METADATA ACCOUNT ADDRESS is : ${metadataPDA}`);
 
   // onchain metadata format
   const tokenMetadata = {
@@ -318,10 +288,6 @@ try{
     collection: null,
     uses: null,
   };
-
-  console.log("=============================");
-  console.log("CREATING TRANSACTION");
-  console.log("=============================");
   // transaction to create metadata account
   const transaction = new web3.Transaction().add(
     createCreateMetadataAccountV2Instruction(
@@ -340,10 +306,6 @@ try{
       }
     )
   );
-
-  console.log(`METADATA TRANSACTİON : ${transaction}`);
-  console.log("=============================");
-  console.log("BEGIN SEND AND CONFIRMTRANSACTION");
   // send transaction
   const transactionSignature2 = await web3.sendAndConfirmTransaction(
     connection,
@@ -351,10 +313,6 @@ try{
     [user]
   );
 
-  console.log(
-    `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
-  );
-  console.log("PublicKey:", user.publicKey.toBase58());
 }catch(e){
     console.log({e})
 }
@@ -366,29 +324,30 @@ try{
           await setUpFDRLToken(data,temperature)
           await setUpHDRLToken(data,humidity)
           await setUpPHRLToken(data,phVal)
-          console.log("completed")
           return "completed"
     }
 
 
-
+    io.on('connection', (socket) => {
+      console.log(`⚡: ${socket.id} user just connected!`);
+      socket.on('disconnect', () => {
+              socket.disconnect()
+        console.log('🔥: A user disconnected');
+      });
+  });
 
 
     const checkUserData = async () =>{
-        console.log("checking user data....")
         const allSubscription = await getAllSubData()
         const ValidSubscription = allSubscription.filter((subscription)=>{
             const totalDurationInMinutes =parseInt(subscription.startTime) + parseInt(subscription.endSub)
-            console.log({subscription},subscription.startTime,subscription.endSub)
             let date = new Date();
             let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
-            console.log({totalDurationInMinutes,currentTimeInMinutes})
             if(totalDurationInMinutes> currentTimeInMinutes && subscription.hasActiveSub){
                 console.log("we are here")
                 let startTimeTime = parseInt(subscription.startTime) + ( subscription.subRatePerMin * (subscription.noOfTransaction + 1))
                 console.log({startTimeTime,cur:subscription.nextTime})
                 if(startTimeTime === parseInt(subscription.nextTime)){
-                    console.log({subscription})
                     return subscription
                 }
             }else{
@@ -396,12 +355,9 @@ try{
                 return
             }
         })
-        console.log({ValidSubscription})
         if(ValidSubscription.length > 0) {
             await Promise.all(ValidSubscription.map(async data => {
-                console.log({data})
                 const {temperature,humidity,phVal} = await findUserReadings(data.MacAddress)
-                console.log({temperature,humidity,phVal})
                 if(temperature){
                   // Sub.findByIdAndUpdate(data._id,{
                   //   hasActiveSub:active,
@@ -412,18 +368,24 @@ try{
                   //  }) 
                   const result =await runBlockchainTransaction(data,temperature,humidity,phVal)
                 if(result === "completed") {
+                  console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed")
+                  io.emit("success",{
+                    data:{temperature,humidity,phVal},
+                    status:true
+                  }
+                  )
                     const totalDurationInMinutes =parseInt(data.startTime) + parseInt(data.endSub)
                     console.log(data.startTime,data.endSub)
                     let date = new Date();
                     let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
                     let active = currentTimeInMinutes > totalDurationInMinutes ? false : true
-                   Sub.findByIdAndUpdate(data._id,{
-                    hasActiveSub:active,
-                    // presentDate: nextFrequencyData,
-                    $inc: { noOfTransaction: 1, },
-                    nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
+                  //  Sub.findByIdAndUpdate(data._id,{
+                  //   hasActiveSub:active,
+                  //   // presentDate: nextFrequencyData,
+                  //   $inc: { noOfTransaction: 1, },
+                  //   nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
                 
-                   }) 
+                  //  }) 
                 } 
                 }else{
                   return
