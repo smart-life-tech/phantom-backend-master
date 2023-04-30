@@ -172,10 +172,10 @@ try{
     );
 
   // file to buffer
-  const buffer = fs.readFileSync("assets/fara.jpeg");
+  const buffer = fs.readFileSync("assets/hum.jpeg");
 
   // buffer to metaplex file
-  const file = toMetaplexFile(buffer, "fara.jpeg");
+  const file = toMetaplexFile(buffer, "hum.jpeg");
 
   // upload image and get image uri
   const imageUri = await metaplex.storage().upload(file);
@@ -258,10 +258,10 @@ try{
     );
 
   // file to buffer
-  const buffer = fs.readFileSync("assets/fara.jpeg");
+  const buffer = fs.readFileSync("assets/ph.png");
 
   // buffer to metaplex file
-  const file = toMetaplexFile(buffer, "fara.jpeg");
+  const file = toMetaplexFile(buffer, "ph.png");
 
   // upload image and get image uri
   const imageUri = await metaplex.storage().upload(file);
@@ -328,15 +328,6 @@ try{
     }
 
 
-    io.on('connection', (socket) => {
-      console.log(`⚡: ${socket.id} user just connected!`);
-      socket.on('disconnect', () => {
-              socket.disconnect()
-        console.log('🔥: A user disconnected');
-      });
-  });
-
-
     const checkUserData = async () =>{
         const allSubscription = await getAllSubData()
         const ValidSubscription = allSubscription.filter((subscription)=>{
@@ -399,7 +390,7 @@ try{
     }
 
 
-    cron.schedule('* * * * * ',checkUserData)
+    // cron.schedule('* * * * * ',checkUserData)
 
     return router
 }
