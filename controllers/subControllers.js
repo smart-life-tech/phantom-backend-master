@@ -6,14 +6,18 @@ const User = require("../models/userModel");
 
 const createSub = asyncHandler(async (req, res) => {
   const { name, subRatePerMin, hasActiveSub, email,durationInMinutes,MacAddress } = req.body;
+  console.log(12344)
+  try{
+
+ 
 console.log({ name, subRatePerMin, hasActiveSub, email,durationInMinutes })
 
   const user = checkToken(req.headers.authorization.split(" ")[1])
   const userInfo =await User.findById(user.id)
   const subInfo =await Sub.findOne({email})
   console.log({subInfo})
-  const reading =await Readings.find({[`$dynamicKey.${MacAddress}`]: { "$exists": true } })
-  console.log({reading},reading[MacAddress])
+  // const reading =await Readings.find({[`$dynamicKey.${MacAddress}`]: { "$exists": true } })
+  // console.log({reading},reading[MacAddress])
   const {startTime,nextTime,endSub} = changeFrequencyTodays(subRatePerMin)
     console.log({startTime,nextTime,endSub})
   if(userInfo){
@@ -25,7 +29,8 @@ console.log("you have a sub")
   
     const {startTime,nextTime,endSub} = changeFrequencyTodays(subRatePerMin)
     console.log({startTime,nextTime,endSub})
-    const userSub = await Sub.create({
+    if(splsTokens){
+       const userSub = await Sub.create({
   userID:userInfo._id,
     name,
     subRatePerMin,
@@ -39,19 +44,24 @@ console.log("you have a sub")
     nextTime,
     endSub,
     noOfTransaction:0
-  })
-  // const reading = Readings.findOne({[`${'24:62:AB:FC:A8:4C'}.name`]: { "$exists": true } })
-  const reading = Readings.findOne({[`${userSub.MacAddress}.name`]: { "$exists": true } })
-  console.log({userSub,reading})
-  res.status(201).json({
-      // _id: userSub._id,
-      // name: userSub.name,
-      // subRatePerMin: userSub.subRatePerMin,
-      // hasActiveSub: userSub.hasActiveSub,
-      // email: userSub.email,
-      // createdAt: userSub.createdAt
-      ...userSub
-    })
+  }) 
+   // const reading = Readings.findOne({[`${'24:62:AB:FC:A8:4C'}.name`]: { "$exists": true } })
+   const reading = Readings.findOne({[`${userSub.MacAddress}.name`]: { "$exists": true } })
+   console.log({userSub,reading})
+   res.status(201).json({
+       // _id: userSub._id,
+       // name: userSub.name,
+       // subRatePerMin: userSub.subRatePerMin,
+       // hasActiveSub: userSub.hasActiveSub,
+       // email: userSub.email,
+       // createdAt: userSub.createdAt
+       ...userSub
+     })
+    }else{
+      console.log("token creating failed")
+    }
+  
+ 
   }
   }else{
     
@@ -60,7 +70,9 @@ console.log("you have a sub")
     throw new Error("Error Occurred !")
   }
   console.log({userInfo})
-
+}catch(e){
+  console.log({e})  
+}
 })
 
 

@@ -47,9 +47,11 @@ try{
     
         let FDRLPubKey = new PublicKey(data.FDRL);
         let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo)
-         const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+        const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, FDRLPubKey);
+         console.log({mintInfo})
         const user = await initializeKeypair(connection);
+        console.log({mintInfo,user,FDRLTokenAccount,FDRLPubKey})
         const transactionSignature = await token.mintTo(
             connection,
             user,
@@ -59,19 +61,19 @@ try{
             temperature * 10 ** mintInfo.decimals
           );
 
-          // console.log(
-          //   `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
-          // );
+          console.log(
+            `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
+          );
               // metaplex setup
-    const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(user))
-    .use(
-      bundlrStorage({
-        address: "https://devnet.bundlr.network",
-        providerUrl: "https://api.devnet.solana.com",
-        timeout: 60000,
-      })
-    );
+              const metaplex = Metaplex.make(connection)
+              .use(keypairIdentity(user))
+              .use(
+                bundlrStorage({
+                  address: "https://node1.bundlr.network",
+                  providerUrl: "https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc",
+                  timeout: 60000,
+                })
+              );
 
   // file to buffer
   const buffer = fs.readFileSync("assets/fara.jpeg");
@@ -133,7 +135,7 @@ try{
   );
 
   // console.log(
-  //   `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
+  //   `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=mainnet`
   // );
   // console.log("PublicKey:", user.publicKey.toBase58());
 }catch(e){
@@ -145,7 +147,7 @@ try{
     
         let HDRLPubKey = new PublicKey(data.HDRL);
         let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
-         const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+         const connection = new web3.Connection(web3.clusterApiUrl("mainnet"));
          const mintInfo = await token.getMint(connection, HDRLPubKey);
         const user = await initializeKeypair(connection);
         const transactionSignature = await token.mintTo(
@@ -158,15 +160,15 @@ try{
           );
 
           // console.log(
-          //   `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+          //   `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
           // );
               // metaplex setup
     const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(user))
     .use(
       bundlrStorage({
-        address: "https://devnet.bundlr.network",
-        providerUrl: "https://api.devnet.solana.com",
+        address: "https://mainnet.bundlr.network",
+        providerUrl: "https://api.mainnet.solana.com",
         timeout: 60000,
       })
     );
@@ -235,7 +237,7 @@ try{
     
         let PHRLPubKey = new PublicKey(data.PHRL);
         let PHRLTokenAccount = new PublicKey(data.PHRLAccountInfo)
-         const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+         const connection = new web3.Connection(web3.clusterApiUrl("mainnet"));
          const mintInfo = await token.getMint(connection, PHRLPubKey);
         const user = await initializeKeypair(connection);
         const transactionSignature = await token.mintTo(
@@ -251,8 +253,8 @@ try{
     .use(keypairIdentity(user))
     .use(
       bundlrStorage({
-        address: "https://devnet.bundlr.network",
-        providerUrl: "https://api.devnet.solana.com",
+        address: "https://mainnet.bundlr.network",
+        providerUrl: "https://api.mainnet.solana.com",
         timeout: 60000,
       })
     );
@@ -322,8 +324,8 @@ try{
     const runBlockchainTransaction = async (data,temperature,humidity,phVal) => {
        
           await setUpFDRLToken(data,temperature)
-          await setUpHDRLToken(data,humidity)
-          await setUpPHRLToken(data,phVal)
+          // await setUpHDRLToken(data,humidity)
+          // await setUpPHRLToken(data,phVal)
           return "completed"
     }
 
@@ -357,6 +359,7 @@ try{
                   //   nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
                 
                   //  }) 
+                  console.log(1234)
                   const result =await runBlockchainTransaction(data,temperature,humidity,phVal)
                 if(result === "completed") {
                   console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed")

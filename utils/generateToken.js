@@ -21,12 +21,12 @@ const checkToken = (token) => {
 
 const createCustomTokenForUser =async (address) => {
   try {
-    const connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
+    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc ", "confirmed"); //lts test this 
     const user = await initializeKeypair(connection);
   
     const decimals = 4;
     const myAddress = new PublicKey(address);
-   
+   console.log({myAddress,user,decimals},user.publicKey)
     // const owner = user.publicKey;
 
   const HDRL = await token.createMint(
@@ -50,6 +50,7 @@ const createCustomTokenForUser =async (address) => {
     user.publicKey,
     decimals
   );
+  console.log({HDRL,PHRL,FDRL})
   const newHDRLAccount = await token.createAssociatedTokenAccount(
     connection,
     user,
@@ -69,7 +70,7 @@ const createCustomTokenForUser =async (address) => {
    myAddress
   );
   
-
+    console.log({newFDRLAccount,newHDRLAccount,newPHRLAccount})
   const HDRLAccountInfo = await token.getAccount(
     connection,
     newHDRLAccount

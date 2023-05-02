@@ -19,7 +19,7 @@ const {
   async function main() {
     // Variables
     // my wallet address = 9etdXNVKagNphUuhP9MojkZ7TWwkdQx4FU8V4HXuWWeD
-    const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+    const connection = new web3.Connection(web3.clusterApiUrl("mainnet"));
     const user = await initializeKeypair(connection);
     const payer = user;
   
@@ -51,7 +51,7 @@ const {
     console.log("TOKEN MINT BİLGİLERİ:");
     console.log(`The token mint account address is ${tokenPubKey}`);
     console.log(
-      `Token Mint: https://explorer.solana.com/address/${tokenPubKey}?cluster=devnet`
+      `Token Mint: https://explorer.solana.com/address/${tokenPubKey}?cluster=mainnet`
     );
   
     // Create Token Account
@@ -87,7 +87,7 @@ const {
         3 * 10 ** mintInfo.decimals
       );
       console.log(
-        `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+        `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
       );
     } else {
       console.log("no there is no token account")
@@ -107,7 +107,7 @@ const {
         3 * 10 ** mintInfo.decimals
       );
       console.log(
-        `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+        `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
       );
     }
     // metaplex setup
@@ -115,8 +115,8 @@ const {
       .use(keypairIdentity(user))
       .use(
         bundlrStorage({
-          address: "https://devnet.bundlr.network",
-          providerUrl: "https://api.devnet.solana.com",
+          address: "https://mainnet.bundlr.network",
+          providerUrl: "https://api.mainnet.solana.com",
           timeout: 60000,
         })
       );
@@ -188,13 +188,13 @@ const {
     );
   
     console.log(
-      `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
+      `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=mainnet`
     );
     console.log("PublicKey:", user.publicKey.toBase58());
   }
   async function main2() {
     // Variables
-    const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+    const connection = new web3.Connection(web3.clusterApiUrl("mainnet"));
     const user = await initializeKeypair(connection);
     const payer = user;
     const myAddress = new PublicKey("AmgWvVsaJy7UfWJS5qXn5DozYcsBiP2EXBH8Xdpj5YXT");
@@ -215,7 +215,7 @@ const {
     console.log("TOKEN MINT BİLGİLERİ:");
     console.log(`The token mint account address is ${tokenMint}`);
     console.log(
-      `Token Mint: https://explorer.solana.com/address/${tokenMint}?cluster=devnet`
+      `Token Mint: https://explorer.solana.com/address/${tokenMint}?cluster=mainnet`
     );
   
     // Create Token Account
@@ -237,7 +237,7 @@ const {
       3 * 10 ** mintInfo.decimals
     );
     console.log(
-      `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+      `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
     );
     // end mint token
   
@@ -246,8 +246,8 @@ const {
       .use(keypairIdentity(user))
       .use(
         bundlrStorage({
-          address: "https://devnet.bundlr.network",
-          providerUrl: "https://api.devnet.solana.com",
+          address: "https://mainnet.bundlr.network",
+          providerUrl: "https://api.mainnet.solana.com",
           timeout: 60000,
         })
       );
@@ -319,13 +319,13 @@ const {
     );
   
     console.log(
-      `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
+      `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=mainnet`
     );
     console.log("PublicKey:", user.publicKey.toBase58());
   }
   async function main3() {
     // Variables
-    const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+    const connection = new web3.Connection(web3.clusterApiUrl("mainnet"));
     const user = await initializeKeypair(connection);
     const payer = user;
     const myAddress = new PublicKey("AmgWvVsaJy7UfWJS5qXn5DozYcsBiP2EXBH8Xdpj5YXT");
@@ -346,7 +346,7 @@ const {
     console.log("TOKEN MINT BİLGİLERİ:");
     console.log(`The token mint account address is ${tokenMint}`);
     console.log(
-      `Token Mint: https://explorer.solana.com/address/${tokenMint}?cluster=devnet`
+      `Token Mint: https://explorer.solana.com/address/${tokenMint}?cluster=mainnet`
     );
   
     const tokenATA = await token.getAssociatedTokenAddress(
@@ -374,7 +374,7 @@ const {
     );
   
     console.log(
-      `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+      `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
     );
     // end mint token
   
@@ -383,8 +383,8 @@ const {
       .use(keypairIdentity(user))
       .use(
         bundlrStorage({
-          address: "https://devnet.bundlr.network",
-          providerUrl: "https://api.devnet.solana.com",
+          address: "https://mainnet.bundlr.network",
+          providerUrl: "https://api.mainnet.solana.com",
           timeout: 60000,
         })
       );
@@ -456,13 +456,13 @@ const {
     );
   
     console.log(
-      `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=devnet`
+      `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=mainnet`
     );
     console.log("PublicKey:", user.publicKey.toBase58());
   }
   async function main4() {
     async function main4() {
-      const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+      const connection = new web3.Connection(web3.clusterApiUrl("mainnet"));
       const user = await initializeKeypair(connection);
       const payer = user;
       const myAddress = new PublicKey("AmgWvVsaJy7UfWJS5qXn5DozYcsBiP2EXBH8Xdpj5YXT");
@@ -499,7 +499,7 @@ const {
           3 * 10 ** mintInfo.decimals
         );
         console.log(
-          `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+          `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
         );
       } else {
         // Create a new token account and mint tokens to that account with the given amount
@@ -518,7 +518,7 @@ const {
           3 * 10 ** mintInfo.decimals
         );
         console.log(
-          `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+          `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
         );
       }
     }
