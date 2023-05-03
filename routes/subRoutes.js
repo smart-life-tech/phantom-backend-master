@@ -47,7 +47,7 @@ try{
     
         let FDRLPubKey = new PublicKey(data.FDRL);
         let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo)
-        const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc ", "confirmed"); 
+        const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, FDRLPubKey);
         const user = await initializeKeypair(connection);
         console.log({mintInfo,user,FDRLTokenAccount,FDRLPubKey})
@@ -70,7 +70,7 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc",
                   timeout: 60000,
                 })
               );
@@ -147,7 +147,7 @@ try{
     
         let HDRLPubKey = new PublicKey(data.HDRL);
         let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
-         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc ", "confirmed"); 
+         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, HDRLPubKey);
         const user = await initializeKeypair(connection);
         const transactionSignature = await token.mintTo(
@@ -159,16 +159,16 @@ try{
             parseInt(humidity) * 10 ** mintInfo.decimals
           );
 
-          // console.log(
-          //   `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
-          // );
+          console.log(
+            `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
+          );
               // metaplex setup
      const metaplex = Metaplex.make(connection)
               .use(keypairIdentity(user))
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc",
                   timeout: 60000,
                 })
               );
@@ -237,7 +237,7 @@ try{
     
         let PHRLPubKey = new PublicKey(data.PHRL);
         let PHRLTokenAccount = new PublicKey(data.PHRLAccountInfo)
-         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc ", "confirmed"); 
+         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, PHRLPubKey);
         const user = await initializeKeypair(connection);
         const transactionSignature = await token.mintTo(
@@ -254,7 +254,7 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc",
                   timeout: 60000,
                 })
               );
@@ -323,9 +323,9 @@ try{
 
     const runBlockchainTransaction = async (data,temperature,humidity,phVal) => {
        
-          await setUpFDRLToken(data,temperature)
+          // await setUpFDRLToken(data,temperature)
           await setUpHDRLToken(data,humidity)
-          await setUpPHRLToken(data,phVal)
+          // await setUpPHRLToken(data,phVal)
           return "completed"
     }
 

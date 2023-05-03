@@ -36,7 +36,7 @@ const createCustomTokenForUser =async (address) => {
 // console.log({users,HDRLs,},users.publicKey)
 
 
-    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc", "confirmed"); //lts test this 
+    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc", "confirmed"); //lts test this 
     const user = await initializeKeypair(connection);
   
     const decimals = 4;

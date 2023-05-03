@@ -80,6 +80,7 @@ async function airdropSolIfNeeded(
   signer,
   connection
 ) {
+  console.log("airdropping")
   const balance = await connection.getBalance(signer.publicKey)
   console.log("Current balance is", balance )
 
