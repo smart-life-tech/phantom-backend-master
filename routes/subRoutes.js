@@ -394,7 +394,7 @@ try{
     }
 
 
-    cron.schedule('*/3 * * * *',checkUserData)
+    // cron.schedule('*/3 * * * *',checkUserData)
 
     return router
 }
