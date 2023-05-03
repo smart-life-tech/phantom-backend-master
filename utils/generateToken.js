@@ -21,7 +21,22 @@ const checkToken = (token) => {
 
 const createCustomTokenForUser =async (address) => {
   try {
-    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc ", "confirmed"); //lts test this 
+
+//     const connectionss = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
+//     const users = await initializeKeypair(connectionss);
+  
+//     const decimal = 4;
+//   const HDRLs = await token.createMint(
+//     connectionss,
+//     users,
+//     users.publicKey,
+//     users.publicKey,
+//     decimal
+//   );
+// console.log({users,HDRLs,},users.publicKey)
+
+
+    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/0VWYlEI9VqzgbwNyVPcXNffVN0e3ZTODtZfOaZQmHKN0cqVGgZEJlHBBx37QDOeW/rpc", "confirmed"); //lts test this 
     const user = await initializeKeypair(connection);
   
     const decimals = 4;
