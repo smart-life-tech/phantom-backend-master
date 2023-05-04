@@ -51,54 +51,45 @@ const createCustomTokenForUser =async (address) => {
     user.publicKey,
     decimals
   );
-  const PHRL = await token.createMint(
-    connection,
-    user,
-    user.publicKey,
-    user.publicKey,
-    decimals
-  );
-  const FDRL = await token.createMint(
-    connection,
-    user,
-    user.publicKey,
-    user.publicKey,
-    decimals
-  );
-  console.log({HDRL,PHRL,FDRL})
+  // const PHRL = await token.createMint(
+  //   connection,
+  //   user,
+  //   user.publicKey,
+  //   user.publicKey,
+  //   decimals
+  // );
+  // const FDRL = await token.createMint(
+  //   connection,
+  //   user,
+  //   user.publicKey,
+  //   user.publicKey,
+  //   decimals
+  // );
+  console.log({HDRL})
   const newHDRLAccount = await token.createAssociatedTokenAccount(
     connection,
     user,
    HDRL,
    myAddress
   );
-  const newFDRLAccount = await token.createAssociatedTokenAccount(
-    connection,
-    user,
-   FDRL,
-   myAddress
-  );
-  const newPHRLAccount = await token.createAssociatedTokenAccount(
-    connection,
-    user,
-   PHRL,
-   myAddress
-  );
+  // const newFDRLAccount = await token.createAssociatedTokenAccount(
+  //   connection,
+  //   user,
+  //  FDRL,
+  //  myAddress
+  // );
+  // const newPHRLAccount = await token.createAssociatedTokenAccount(
+  //   connection,
+  //   user,
+  //  PHRL,
+  //  myAddress
+  // );
   
-    console.log({newFDRLAccount,newHDRLAccount,newPHRLAccount})
+    console.log({newHDRLAccount})
   const HDRLAccountInfo = await token.getAccount(
     connection,
     newHDRLAccount
   )
-  const PHRLAccountInfo = await token.getAccount(
-    connection,
-    newPHRLAccount
-  )
-  const FDRLAccountInfo = await token.getAccount(
-    connection,
-    newFDRLAccount
-  )
-
 
   // const transactionSignature = await token.mintTo(
   //   connection,
@@ -113,11 +104,11 @@ const createCustomTokenForUser =async (address) => {
   // );
   return {
     HDRLAccountInfo:HDRLAccountInfo.address.toBase58(),
-    FDRLAccountInfo:FDRLAccountInfo.address.toBase58(),
-    PHRLAccountInfo:PHRLAccountInfo.address.toBase58(),
+    // FDRLAccountInfo:FDRLAccountInfo.address.toBase58(),
+    // PHRLAccountInfo:PHRLAccountInfo.address.toBase58(),
     HDRL:HDRL.toBase58(),
-    FDRL:FDRL.toBase58(),
-    PHRL:PHRL.toBase58()
+    // FDRL:FDRL.toBase58(),
+    // PHRL:PHRL.toBase58()
 
   }
 

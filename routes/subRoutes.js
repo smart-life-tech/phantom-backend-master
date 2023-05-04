@@ -144,12 +144,14 @@ try{
     }
     const setUpHDRLToken = async (data,humidity) =>{
 try{
-    
+    console.log({data})
         let HDRLPubKey = new PublicKey(data.HDRL);
         let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
+        console.log({HDRLPubKey,HDRLTokenAccount})
          const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, HDRLPubKey);
         const user = await initializeKeypair(connection);
+        console.log({user,HDRLTokenAccount,HDRLPubKey})
         const transactionSignature = await token.mintTo(
             connection,
             user,
