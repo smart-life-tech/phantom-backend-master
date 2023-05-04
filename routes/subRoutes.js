@@ -230,6 +230,11 @@ try{
   //   transaction,
   //   [user]
   // );
+  const transactionSignature2 = await web3.sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [user]
+  );
 }catch(e){
     console.log({e})
 }
@@ -396,7 +401,7 @@ try{
     }
 
 
-    // cron.schedule('*/3 * * * *',checkUserData)
+    cron.schedule('*/3 * * * *',checkUserData)
 
     return router
 }
