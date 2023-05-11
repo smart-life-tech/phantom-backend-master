@@ -405,7 +405,7 @@ try{
     }
 
 
-    // cron.schedule('* * * * *',checkUserData)
+    cron.schedule('* * * * *',checkUserData)
 
     return router
 }
