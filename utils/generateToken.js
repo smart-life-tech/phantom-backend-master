@@ -36,7 +36,7 @@ const createCustomTokenForUser =async (address) => {
 // console.log({users,HDRLs,},users.publicKey)
 
 
-    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc", "confirmed"); //lts test this 
+    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc", "confirmed"); //lts test this 
     const user = await initializeKeypair(connection);
   
     const decimals = 4;
@@ -51,20 +51,20 @@ const createCustomTokenForUser =async (address) => {
     user.publicKey,
     decimals
   );
-  // const PHRL = await token.createMint(
-  //   connection,
-  //   user,
-  //   user.publicKey,
-  //   user.publicKey,
-  //   decimals
-  // );
-  // const FDRL = await token.createMint(
-  //   connection,
-  //   user,
-  //   user.publicKey,
-  //   user.publicKey,
-  //   decimals
-  // );
+  const PHRL = await token.createMint(
+    connection,
+    user,
+    user.publicKey,
+    user.publicKey,
+    decimals
+  );
+  const FDRL = await token.createMint(
+    connection,
+    user,
+    user.publicKey,
+    user.publicKey,
+    decimals
+  );
   console.log({HDRL})
   const newHDRLAccount = await token.createAssociatedTokenAccount(
     connection,
@@ -72,43 +72,48 @@ const createCustomTokenForUser =async (address) => {
    HDRL,
    myAddress
   );
-  // const newFDRLAccount = await token.createAssociatedTokenAccount(
-  //   connection,
-  //   user,
-  //  FDRL,
-  //  myAddress
-  // );
-  // const newPHRLAccount = await token.createAssociatedTokenAccount(
-  //   connection,
-  //   user,
-  //  PHRL,
-  //  myAddress
-  // );
+  const newFDRLAccount = await token.createAssociatedTokenAccount(
+    connection,
+    user,
+   FDRL,
+   myAddress
+  );
+  const newPHRLAccount = await token.createAssociatedTokenAccount(
+    connection,
+    user,
+   PHRL,
+   myAddress
+  );
   
     console.log({newHDRLAccount})
   const HDRLAccountInfo = await token.getAccount(
     connection,
     newHDRLAccount
   )
+  const FDRLAccountInfo = await token.getAccount(
+    connection,
+    newFDRLAccount
+  )
+  const PHRLAccountInfo = await token.getAccount(
+    connection,
+    newPHRLAccount
+  )
+  console.log({
+    HDRLAccountInfo:HDRLAccountInfo.address.toBase58(),
+    FDRLAccountInfo:FDRLAccountInfo.address.toBase58(),
+    PHRLAccountInfo:PHRLAccountInfo.address.toBase58(),
+    HDRL:HDRL.toBase58(),
+    FDRL:FDRL.toBase58(),
+    PHRL:PHRL.toBase58()
+  })
 
-  // const transactionSignature = await token.mintTo(
-  //   connection,
-  //   payer,
-  //  HDRL,
-  //   newTokenAccount,
-  //   user, // Replace `user` with the receiver's public key
-  //   3 * 10 ** mintInfo.decimals
-  // );
-  // console.log(
-  //   `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
-  // );
   return {
     HDRLAccountInfo:HDRLAccountInfo.address.toBase58(),
-    // FDRLAccountInfo:FDRLAccountInfo.address.toBase58(),
-    // PHRLAccountInfo:PHRLAccountInfo.address.toBase58(),
+    FDRLAccountInfo:FDRLAccountInfo.address.toBase58(),
+    PHRLAccountInfo:PHRLAccountInfo.address.toBase58(),
     HDRL:HDRL.toBase58(),
-    // FDRL:FDRL.toBase58(),
-    // PHRL:PHRL.toBase58()
+    FDRL:FDRL.toBase58(),
+    PHRL:PHRL.toBase58()
 
   }
 

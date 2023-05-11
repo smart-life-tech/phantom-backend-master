@@ -47,7 +47,7 @@ try{
     
         let FDRLPubKey = new PublicKey(data.FDRL);
         let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo)
-        const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc ", "confirmed"); 
+        const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, FDRLPubKey);
         const user = await initializeKeypair(connection);
         console.log({mintInfo,user,FDRLTokenAccount,FDRLPubKey})
@@ -57,7 +57,7 @@ try{
             FDRLPubKey,
             FDRLTokenAccount,
             user, // Replace `user` with the receiver's public key
-            temperature * 10 ** mintInfo.decimals
+            parseInt(temperature) * 10 ** mintInfo.decimals
           );
 
           console.log(
@@ -70,7 +70,7 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc",
                   timeout: 60000,
                 })
               );
@@ -148,7 +148,7 @@ try{
         let HDRLPubKey = new PublicKey(data.HDRL);
         let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
         console.log({HDRLPubKey,HDRLTokenAccount})
-         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc ", "confirmed"); 
+         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, HDRLPubKey);
         const user = await initializeKeypair(connection);
         console.log({user,HDRLTokenAccount,HDRLPubKey})
@@ -170,11 +170,11 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc",
                   timeout: 60000,
                 })
               );
-
+console.log({metaplex})
   // file to buffer
   const buffer = fs.readFileSync("assets/hum.jpeg");
 
@@ -191,7 +191,7 @@ try{
         description: "for all workers of the world",
         image: imageUri,
       })
-  // console.log("metadata uri:", uri);
+  console.log("metadata uri:", uri);
 
   // get metadata account address
   const metadataPDA = await findMetadataPda(HDRLPubKey);
@@ -205,6 +205,7 @@ try{
     collection: null,
     uses: null,
   };
+  console.log({tokenMetadata})
   // transaction to create metadata account
   const transaction = new web3.Transaction().add(
     createCreateMetadataAccountV2Instruction(
@@ -230,6 +231,7 @@ try{
   //   transaction,
   //   [user]
   // );
+  console.log({transaction})
   const transactionSignature2 = await web3.sendAndConfirmTransaction(
     connection,
     transaction,
@@ -244,7 +246,7 @@ try{
     
         let PHRLPubKey = new PublicKey(data.PHRL);
         let PHRLTokenAccount = new PublicKey(data.PHRLAccountInfo)
-         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc ", "confirmed"); 
+         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, PHRLPubKey);
         const user = await initializeKeypair(connection);
         const transactionSignature = await token.mintTo(
@@ -261,7 +263,7 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/tUu8UOheWsLBwF8M9BAceEzu0XvB2mjCjXERnXgtV00khusU40pcVP8lm8w7PvWr/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc",
                   timeout: 60000,
                 })
               );
@@ -330,9 +332,9 @@ try{
 
     const runBlockchainTransaction = async (data,temperature,humidity,phVal) => {
        
-          // await setUpFDRLToken(data,temperature)
+          await setUpFDRLToken(data,temperature)
           await setUpHDRLToken(data,humidity)
-          // await setUpPHRLToken(data,phVal)
+          await setUpPHRLToken(data,phVal)
           return "completed"
     }
 
@@ -380,7 +382,9 @@ try{
                     console.log(data.startTime,data.endSub)
                     let date = new Date();
                     let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
+                    const nextFrequencyData = currentTimeInMinutes + parseInt(data.subRatePerMin)
                     let active = currentTimeInMinutes > totalDurationInMinutes ? false : true
+                    console.log({active,currentTimeInMinutes,data,nextFrequencyData})
                   //  Sub.findByIdAndUpdate(data._id,{
                   //   hasActiveSub:active,
                   //   // presentDate: nextFrequencyData,
@@ -401,7 +405,7 @@ try{
     }
 
 
-    // cron.schedule('*/3 * * * *',checkUserData)
+    // cron.schedule('* * * * *',checkUserData)
 
     return router
 }
