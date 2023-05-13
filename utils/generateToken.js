@@ -36,7 +36,7 @@ const createCustomTokenForUser =async (address) => {
 // console.log({users,HDRLs,},users.publicKey)
 
 
-    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc", "confirmed"); //lts test this 
+    const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc", "confirmed"); //lts test this 
     const user = await initializeKeypair(connection);
   
     const decimals = 4;
@@ -66,27 +66,24 @@ const createCustomTokenForUser =async (address) => {
     decimals
   );
   console.log({HDRL})
-  // const newHDRLAccount = await token.createAssociatedTokenAccount(
-  //   connection,
-  //   user,
-  //  HDRL,
-  //  myAddress
-  // );
-  // const newFDRLAccount = await token.createAssociatedTokenAccount(
-  //   connection,
-  //   user,
-  //  FDRL,
-  //  myAddress
-  // );
-  // const newPHRLAccount = await token.createAssociatedTokenAccount(
-  //   connection,
-  //   user,
-  //  PHRL,
-  //  myAddress
-  // );
-  const newHDRLAccount = new PublicKey("9iYqFPocWJhALeJ1bKPrF7k8La1UtV88XvP8aZTSho7y")
-  const newFDRLAccount = new PublicKey("9iYqFPocWJhALeJ1bKPrF7k8La1UtV88XvP8aZTSho7y")
-  const newPHRLAccount = new PublicKey("9iYqFPocWJhALeJ1bKPrF7k8La1UtV88XvP8aZTSho7y")
+  const newHDRLAccount = await token.createAssociatedTokenAccount(
+    connection,
+    user,
+   HDRL,
+   myAddress
+  );
+  const newFDRLAccount = await token.createAssociatedTokenAccount(
+    connection,
+    user,
+   FDRL,
+   myAddress
+  );
+  const newPHRLAccount = await token.createAssociatedTokenAccount(
+    connection,
+    user,
+   PHRL,
+   myAddress
+  );
   
     console.log({newHDRLAccount})
   const HDRLAccountInfo = await token.getAccount(
