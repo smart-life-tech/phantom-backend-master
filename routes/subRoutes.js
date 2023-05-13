@@ -47,7 +47,7 @@ try{
     
         let FDRLPubKey = new PublicKey(data.FDRL);
         let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo)
-        const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc ", "confirmed"); 
+        const connection = new web3.Connection("kkrrrrrrrrrrrrr ", "confirmed"); 
          const mintInfo = await token.getMint(connection, FDRLPubKey);
         const user = await initializeKeypair(connection);
         console.log({mintInfo,user,FDRLTokenAccount,FDRLPubKey})
@@ -70,7 +70,7 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
                   timeout: 60000,
                 })
               );
@@ -148,7 +148,7 @@ try{
         let HDRLPubKey = new PublicKey(data.HDRL);
         let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
         console.log({HDRLPubKey,HDRLTokenAccount})
-         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc ", "confirmed"); 
+         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, HDRLPubKey);
         const user = await initializeKeypair(connection);
         console.log({user,HDRLTokenAccount,HDRLPubKey})
@@ -170,7 +170,7 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
                   timeout: 60000,
                 })
               );
@@ -246,7 +246,7 @@ try{
     
         let PHRLPubKey = new PublicKey(data.PHRL);
         let PHRLTokenAccount = new PublicKey(data.PHRLAccountInfo)
-         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc ", "confirmed"); 
+         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, PHRLPubKey);
         const user = await initializeKeypair(connection);
         const transactionSignature = await token.mintTo(
@@ -263,7 +263,7 @@ try{
               .use(
                 bundlrStorage({
                   address: "https://node1.bundlr.network",
-                  providerUrl: "https://solana-api.syndica.io/access-token/aD3oDd3TLUSql79CXUR8hADb7NV8RDVmL0LF2qu4ok2XW4u1UadPgtuoO6EtUVNH/rpc",
+                  providerUrl: "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
                   timeout: 60000,
                 })
               );
@@ -405,7 +405,7 @@ try{
     }
 
 
-    cron.schedule('* * * * *',checkUserData)
+    cron.schedule('*/5 * * * *',checkUserData)
 
     return router
 }
