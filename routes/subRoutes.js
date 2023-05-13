@@ -362,13 +362,17 @@ try{
                 const {temperature,humidity,phVal} = await findUserReadings(data.MacAddress)
                 if(temperature){
                   console.log("eeee")
-                  // Sub.findByIdAndUpdate(data._id,{
-                  //   hasActiveSub:active,
-                  //   // presentDate: nextFrequencyData,
-                  //   $inc: { noOfTransaction: 1, },
-                  //   nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
+                  let date = new Date();
+                  let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
+                  const nextFrequencyData = currentTimeInMinutes + parseInt(data.subRatePerMin)
+                  console.log({nextFrequencyData,currentTimeInMinutes})
+                  let active = currentTimeInMinutes > totalDurationInMinutes ? false : true
+                  Sub.findByIdAndUpdate(data._id,{
+                    hasActiveSub:active,
+                    $inc: { noOfTransaction: 1, },
+                    nextTime:`${nextFrequencyData}`
                 
-                  //  }) 
+                   }) 
                   console.log(1234)
                   const result =await runBlockchainTransaction(data,temperature,humidity,phVal)
                 if(result === "completed") {

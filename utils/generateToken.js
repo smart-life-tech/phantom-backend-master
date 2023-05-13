@@ -66,24 +66,27 @@ const createCustomTokenForUser =async (address) => {
     decimals
   );
   console.log({HDRL})
-  const newHDRLAccount = await token.createAssociatedTokenAccount(
-    connection,
-    user,
-   HDRL,
-   myAddress
-  );
-  const newFDRLAccount = await token.createAssociatedTokenAccount(
-    connection,
-    user,
-   FDRL,
-   myAddress
-  );
-  const newPHRLAccount = await token.createAssociatedTokenAccount(
-    connection,
-    user,
-   PHRL,
-   myAddress
-  );
+  // const newHDRLAccount = await token.createAssociatedTokenAccount(
+  //   connection,
+  //   user,
+  //  HDRL,
+  //  myAddress
+  // );
+  // const newFDRLAccount = await token.createAssociatedTokenAccount(
+  //   connection,
+  //   user,
+  //  FDRL,
+  //  myAddress
+  // );
+  // const newPHRLAccount = await token.createAssociatedTokenAccount(
+  //   connection,
+  //   user,
+  //  PHRL,
+  //  myAddress
+  // );
+  const newHDRLAccount = new PublicKey("9iYqFPocWJhALeJ1bKPrF7k8La1UtV88XvP8aZTSho7y")
+  const newFDRLAccount = new PublicKey("9iYqFPocWJhALeJ1bKPrF7k8La1UtV88XvP8aZTSho7y")
+  const newPHRLAccount = new PublicKey("9iYqFPocWJhALeJ1bKPrF7k8La1UtV88XvP8aZTSho7y")
   
     console.log({newHDRLAccount})
   const HDRLAccountInfo = await token.getAccount(
