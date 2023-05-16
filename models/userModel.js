@@ -12,6 +12,9 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    MacAddress: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,

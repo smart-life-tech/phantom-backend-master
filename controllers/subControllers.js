@@ -79,10 +79,15 @@ console.log("you have a sub")
 
 
 const getSub = asyncHandler(async (req, res) => {
-
- console.log(8828289)
-  const { IP } = req.query;
-
+try{
+  const user = checkToken(req.headers.authorization.split(" ")[1])
+  console.log({user})
+  const userInfo =await User.findById(user.id)
+  if(userInfo){
+     console.log(8828289)
+  const { IP } = req.body;
+  console.log({IP})
+ 
   const readingData = await Readings.find()
         const readings =  readingData.filter(reading =>{
             const resultObj = reading.toObject()
@@ -92,6 +97,10 @@ const getSub = asyncHandler(async (req, res) => {
         const latestReading = readings[readings.length-1] ? readings[readings.length-1].toObject() : null
         console.log({latestReading})
   if(latestReading){
+    const updateMac = await User.findByIdAndUpdate(user.id,{
+      MacAddress:IP
+    },{new:true})
+    console.log({updateMac})
     res.json({
      reading:latestReading,
       status:true
@@ -102,7 +111,13 @@ const getSub = asyncHandler(async (req, res) => {
       status:false
     })
   }
+  }
+
   
+}catch(e){
+  console.log({e})
+}
+
 
 
 })
@@ -143,9 +158,10 @@ const findUserReadings = async(MacAddress,val) => {
 const getLatestSubData = asyncHandler(async (req, res) => {
   console.log(";et go")
   const user = checkToken(req.headers.authorization.split(" ")[1])
-  const userInfo =await Sub.findOne({userID:user.id})
+  const userInfo =await User.findById(user.id)
   console.log({userInfo})
-const {temperature,humidity,phVal} = await findUserReadings(userInfo.MacAddress)
+  if(userInfo.MacAddress){
+   const {temperature,humidity,phVal} = await findUserReadings(userInfo.MacAddress)
 if(temperature){
   res.json({
     temperature,humidity,phVal,
@@ -157,7 +173,14 @@ if(temperature){
     message:"Not found",
     status:false
   })
-}
+} 
+  }else{
+    res.json({
+      message:"Not found",
+      status:false
+    })
+  }
+
 })
 
 

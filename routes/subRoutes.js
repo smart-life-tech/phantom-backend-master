@@ -37,7 +37,7 @@ const Sub = require("../models/subModel");
 module.exports = function(io){ 
     let router = express.Router()
     router.route("/").post(createSub)
-    router.route("/").get(getSub)
+    router.route("/data").post(getSub)
     router.route("/graph").get(getLatestSubData)
 
 
