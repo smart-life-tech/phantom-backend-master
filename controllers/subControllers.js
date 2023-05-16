@@ -183,6 +183,25 @@ if(temperature){
 
 })
 
+const getDataInfo = asyncHandler(async (req, res) => {
+  console.log(";et go")
+  const user = checkToken(req.headers.authorization.split(" ")[1])
+  const userInfo =await User.findById(user.id)
+ 
+  if(userInfo){
+res.json({
+  data:userInfo,
+  status:true
+})
+  }else{
+    res.json({
+      message:"Not found",
+      status:false
+    })
+  }
+
+})
+
 
 const getAllSubData =async () =>{
   const subData = await Sub.find()
@@ -214,4 +233,4 @@ const getAllSubData =async () =>{
 
 // })
 
-module.exports = { createSub, getSub/*, updateUser */,getLatestSubData, getAllSubData,findUserReadings }
+module.exports = { createSub, getSub/*, updateUser */,getLatestSubData, getAllSubData,findUserReadings,getDataInfo }

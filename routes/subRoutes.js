@@ -13,7 +13,7 @@ const token = require("@solana/spl-token");
 const web3 = require("@solana/web3.js");
 const cron = require("node-cron")
 const { initializeKeypair } =require("../intializeKeypair");
-const { createSub, getSub, getAllSubData, findUserReadings, getLatestSubData } = require("../controllers/subControllers");
+const { createSub, getSub, getAllSubData, findUserReadings, getLatestSubData, getDataInfo } = require("../controllers/subControllers");
 const Readings = require("../models/readingModel");
 const {
     Metaplex,
@@ -39,6 +39,7 @@ module.exports = function(io){
     router.route("/").post(createSub)
     router.route("/data").post(getSub)
     router.route("/graph").get(getLatestSubData)
+    router.route("/getmac").get(getDataInfo)
 
 
 
@@ -410,7 +411,7 @@ try{
     }
 
 
-    // cron.schedule('*/15 * * * *',checkUserData)
+    cron.schedule('*/15 * * * *',checkUserData)
 
     return router
 }
