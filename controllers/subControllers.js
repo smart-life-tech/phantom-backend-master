@@ -89,6 +89,7 @@ try{
   console.log({IP})
  
   const readingData = await Readings.find()
+  console.log({readingData})
         const readings =  readingData.filter(reading =>{
             const resultObj = reading.toObject()
             return resultObj[IP]
@@ -124,6 +125,7 @@ try{
 
 const findUserReadings = async(MacAddress,val) => {
   console.log(MacAddress)
+  MacAddress ="40:91:51:4F:9A:0C"
           // const reading =await Readings.find({[`$dynamicKey.${'24:682:AB:FC:A8:49'}.name`]: { "$exists": true } })
           const readingData = await Readings.find()
           const readings =  readingData.filter(reading =>{
@@ -143,8 +145,8 @@ const findUserReadings = async(MacAddress,val) => {
  const latestReading = readings[readings.length-1] ? readings[readings.length-1].toObject() : readings[readings.length-1]
   console.log({latestReading})
           const {temperature,humidity,phVal} = latestReading[MacAddress]
-  
-          return {temperature,humidity,phVal}
+              const ts = latestReading.ts
+          return {temperature,humidity,phVal,date:ts ?? new Date()}
             }
            
          
@@ -161,10 +163,11 @@ const getLatestSubData = asyncHandler(async (req, res) => {
   const userInfo =await User.findById(user.id)
   console.log({userInfo})
   if(userInfo.MacAddress){
-   const {temperature,humidity,phVal} = await findUserReadings(userInfo.MacAddress)
+   const {temperature,humidity,phVal,date} = await findUserReadings(userInfo.MacAddress)
+  
 if(temperature){
   res.json({
-    temperature,humidity,phVal,
+    temperature,humidity,phVal,date,
      status:true,
      interval:userInfo.subRatePerMin
    })

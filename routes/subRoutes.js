@@ -9,6 +9,9 @@
 
 // module.exports = router; 
 const express = require("express");
+const { getAuth } = require('firebase-admin/auth');
+const { getDatabase,ref } = require('firebase-admin/database');
+var admin = require("firebase-admin");
 const token = require("@solana/spl-token");
 const web3 = require("@solana/web3.js");
 const cron = require("node-cron")
@@ -48,7 +51,7 @@ try{
     
         let FDRLPubKey = new PublicKey(data.FDRL);
         let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo)
-        const connection = new web3.Connection("kkrrrrrrrrrrrrr ", "confirmed"); 
+        const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, FDRLPubKey);
         const user = await initializeKeypair(connection);
         console.log({mintInfo,user,FDRLTokenAccount,FDRLPubKey})
@@ -341,6 +344,7 @@ try{
 
 
     const checkUserData = async () =>{
+   
         const allSubscription = await getAllSubData()
         const ValidSubscription = allSubscription.filter((subscription)=>{
             const totalDurationInMinutes =parseInt(subscription.startTime) + parseInt(subscription.endSub)
