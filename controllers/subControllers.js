@@ -128,6 +128,7 @@ const findUserReadings = async(MacAddress,val) => {
   MacAddress ="40:91:51:4F:9A:0C"
           // const reading =await Readings.find({[`$dynamicKey.${'24:682:AB:FC:A8:49'}.name`]: { "$exists": true } })
           const readingData = await Readings.find()
+          console.log({readingData})
           const readings =  readingData.filter(reading =>{
               const resultObj = reading.toObject()
               return resultObj[MacAddress]
