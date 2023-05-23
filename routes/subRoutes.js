@@ -364,6 +364,7 @@ try{
         })
         if(ValidSubscription.length > 0) {
             await Promise.all(ValidSubscription.map(async data => {
+              console.log({data})
                 const {temperature,humidity,phVal} = await findUserReadings(data.MacAddress)
                 if(temperature){
                   console.log("eeee")
@@ -415,7 +416,7 @@ try{
     }
 
 
-    // cron.schedule('*/15 * * * *',checkUserData)
+    cron.schedule('*/15 * * * *',checkUserData)
 
     return router
 }
