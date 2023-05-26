@@ -163,12 +163,18 @@ const getLatestSubData = asyncHandler(async (req, res) => {
   const user = checkToken(req.headers.authorization.split(" ")[1])
   const userInfo =await User.findById(user.id)
   console.log({userInfo})
+
   if(userInfo.MacAddress){
    const {temperature,humidity,phVal,date} = await findUserReadings(userInfo.MacAddress)
+   const sub = await Sub.findOne({email:userInfo.email})
+   console.log({sub})
   
 if(temperature){
   res.json({
     temperature,humidity,phVal,date,
+    tempToken:sub.FDRLAccountInfo,
+    humidityToken:sub.HDRLAccountInfo,
+    phToken:sub.PHRLAccountInfo,
      status:true,
      interval:userInfo.subRatePerMin
    })
