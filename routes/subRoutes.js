@@ -54,21 +54,14 @@ try{
         const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, FDRLPubKey);
         const user = await initializeKeypair(connection);
-        console.log({mintInfo,user,FDRLTokenAccount,FDRLPubKey})
         const transactionSignature = await token.mintTo(
             connection,
             user,
             FDRLPubKey,
             FDRLTokenAccount,
             user, // Replace `user` with the receiver's public key
-            parseInt(temperature) * 10 ** mintInfo.decimals
+            parseFloat(temperature.toFixed(2)) * 10 ** mintInfo.decimals
           );
-
-          console.log(
-            `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
-          );
-              // metaplex setup
-              console.log("kkrrrrrrrrrrrrr",keypairIdentity(user))
               const metaplex = Metaplex.make(connection)
               .use(keypairIdentity(user))
               .use(
@@ -86,7 +79,6 @@ try{
 
   // upload image and get image uri
   const imageUri = await metaplex.storage().upload(file);
-  console.log("image uri:", imageUri);
 
   // upload metadata and get metadata uri (off chain metadata)
   const { uri } = await metaplex.nfts().uploadMetadata({
@@ -95,11 +87,9 @@ try{
     image: imageUri,
   });
 
-  // console.log("metadata uri:", uri);
 
   // get metadata account address
   const metadataPDA = await findMetadataPda(FDRLPubKey);
-  // console.log(`GET METADATA ACCOUNT ADDRESS is : ${metadataPDA}`);
 
   // onchain metadata format
   const tokenMetadata = {
@@ -129,7 +119,6 @@ try{
       }
     )
   );
-  console.log({transaction},"hghghghh")
 
   // send transaction
   // const transactionSignature2 = await web3.sendAndConfirmTransaction(
@@ -137,36 +126,24 @@ try{
   //   transaction,
   //   [user]
   // );
-
-  // console.log(
-  //   `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature2}?cluster=mainnet`
-  // );
-  // console.log("PublicKey:", user.publicKey.toBase58());
 }catch(e){
     console.log({e})
 }
     }
     const setUpHDRLToken = async (data,humidity) =>{
 try{
-    console.log({data})
         let HDRLPubKey = new PublicKey(data.HDRL);
         let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
-        console.log({HDRLPubKey,HDRLTokenAccount})
          const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed"); 
          const mintInfo = await token.getMint(connection, HDRLPubKey);
         const user = await initializeKeypair(connection);
-        console.log({user,HDRLTokenAccount,HDRLPubKey})
         const transactionSignature = await token.mintTo(
             connection,
             user,
             HDRLPubKey,
             HDRLTokenAccount,
             user, // Replace `user` with the receiver's public key
-            parseInt(humidity) * 10 ** mintInfo.decimals
-          );
-
-          console.log(
-            `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=mainnet`
+            parseFloat(humidity.toFixed(2)) * 10 ** mintInfo.decimals
           );
               // metaplex setup
      const metaplex = Metaplex.make(connection)
@@ -178,7 +155,6 @@ try{
                   timeout: 60000,
                 })
               );
-console.log({metaplex})
   // file to buffer
   const buffer = fs.readFileSync("assets/hum.jpeg");
 
@@ -187,7 +163,6 @@ console.log({metaplex})
 
   // upload image and get image uri
   const imageUri = await metaplex.storage().upload(file);
-  console.log("image uri:", imageUri);
 
     // upload metadata and get metadata uri (off chain metadata)
     const { uri } = await metaplex.nfts().uploadMetadata({
@@ -195,7 +170,6 @@ console.log({metaplex})
         description: "for all workers of the world",
         image: imageUri,
       })
-  console.log("metadata uri:", uri);
 
   // get metadata account address
   const metadataPDA = await findMetadataPda(HDRLPubKey);
@@ -209,7 +183,6 @@ console.log({metaplex})
     collection: null,
     uses: null,
   };
-  console.log({tokenMetadata})
   // transaction to create metadata account
   const transaction = new web3.Transaction().add(
     createCreateMetadataAccountV2Instruction(
@@ -235,7 +208,6 @@ console.log({metaplex})
   //   transaction,
   //   [user]
   // );
-  console.log({transaction})
   const transactionSignature2 = await web3.sendAndConfirmTransaction(
     connection,
     transaction,
@@ -259,7 +231,7 @@ try{
             PHRLPubKey,
             PHRLTokenAccount,
             user, // Replace `user` with the receiver's public key
-            parseInt(phVal) * 10 ** mintInfo.decimals
+            parseFloat(phVal.toFixed(2)) * 10 ** mintInfo.decimals
           );
               // metaplex setup
      const metaplex = Metaplex.make(connection)
@@ -280,7 +252,6 @@ try{
 
   // upload image and get image uri
   const imageUri = await metaplex.storage().upload(file);
-  // console.log("image uri:", imageUri);
 
     // upload metadata and get metadata uri (off chain metadata)
     const { uri } = await metaplex.nfts().uploadMetadata({
@@ -344,75 +315,80 @@ try{
 
 
     const checkUserData = async () =>{
-   
+   try{
+
         const allSubscription = await getAllSubData()
+        console.log({allSubscription})
         const ValidSubscription = allSubscription.filter((subscription)=>{
             const totalDurationInMinutes =parseInt(subscription.startTime) + parseInt(subscription.endSub)
-            let date = new Date();
-            let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
+            const date = new Date();
+            const currentTimeInMinutes = date.getTime() / 60000; //minutes
             if(totalDurationInMinutes> currentTimeInMinutes && subscription.hasActiveSub){
-                console.log("we are here")
-                let startTimeTime = parseInt(subscription.startTime) + ( subscription.subRatePerMin * (subscription.noOfTransaction + 1))
-                console.log({startTimeTime,cur:subscription.nextTime})
-                if(startTimeTime === parseInt(subscription.nextTime)){
+                let startTimeMinutes = parseInt(subscription.startTime) + ( subscription.subRatePerMin * (subscription.noOfTransaction + 1))
+                console.log({currentTimeInMinutes},subscription.nextTime)
+                if(subscription.nextTime <= parseInt(currentTimeInMinutes) && subscription.hasActiveSub){
+                  console.log("yes")
                     return subscription
                 }
             }else{
                 // change avtive subscription to false
-                return
+                return null
             }
         })
+        console.log({ValidSubscription},ValidSubscription.length)
         if(ValidSubscription.length > 0) {
             await Promise.all(ValidSubscription.map(async data => {
-              console.log({data})
-                const {temperature,humidity,phVal} = await findUserReadings(data.MacAddress)
-                if(temperature){
-                  console.log("eeee")
-                  let date = new Date();
-                  let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
-                  const nextFrequencyData = currentTimeInMinutes + parseInt(data.subRatePerMin)
-                  console.log({nextFrequencyData,currentTimeInMinutes})
-                  // let active = currentTimeInMinutes > totalDurationInMinutes ? false : true
-
-                //  await Sub.findByIdAndUpdate(data._id,{
-                //     hasActiveSub:active,
-                //     $inc: { noOfTransaction: 1, },
-                //     nextTime:`${nextFrequencyData}`
-                
-                //    }) 
-                  console.log(1234)
-                  const result =await runBlockchainTransaction(data,temperature,humidity,phVal)
-                if(result === "completed") {
-                  console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed")
-                  io.emit("success",{
-                    data:{temperature,humidity,phVal},
-                    status:true
-                  }
-                  )
-                    const totalDurationInMinutes =parseInt(data.startTime) + parseInt(data.endSub)
-                    console.log(data.startTime,data.endSub)
+                const {temperature,humidity,phVal,date} = await findUserReadings(data.MacAddress)
+                const dateConv = new Date(date);
+          const secondsConv = dateConv.getTime() / 1000; // seconds
+                const dateDiff = parseInt(new Date().getTime() /1000 ) - parseInt(secondsConv)
+                const maxDateDiff = 3*60*60
+                console.log({dateDiff,secondsConv},(new Date().getTime() /1000 ))
+                if(dateDiff <maxDateDiff){
+                  console.log({data})
+                  if(temperature){
+                    console.log("eeee")
                     let date = new Date();
                     let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
                     const nextFrequencyData = currentTimeInMinutes + parseInt(data.subRatePerMin)
+                    const totalDurationInMinutes =parseInt(data.startTime) + parseInt(data.endSub)
+                    console.log({nextFrequencyData,currentTimeInMinutes,totalDurationInMinutes})
                     let active = currentTimeInMinutes > totalDurationInMinutes ? false : true
-                    console.log({active,currentTimeInMinutes,data,nextFrequencyData})
-                  //  Sub.findByIdAndUpdate(data._id,{
-                  //   hasActiveSub:active,
-                  //   // presentDate: nextFrequencyData,
-                  //   $inc: { noOfTransaction: 1, },
-                  //   nextTime:`${parseInt(data.nextTime) + data.subRatePerMin}`
-                
-                  //  }) 
-                } 
+                    console.log({active})
+                   await Sub.findByIdAndUpdate(data._id,{
+                      hasActiveSub:active,
+                      noOfTransaction:data.noOfTransaction+1,
+                      nextTime:`${nextFrequencyData}`
+                  
+                     }) 
+                    const result = await runBlockchainTransaction(data,temperature,humidity,phVal)
+                  if(result === "completed") {
+                    console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed")
+                    io.emit("success",{
+                      data:{temperature,humidity,phVal},
+                      status:true
+                    }
+                    )
+                   
+                    
+                  } 
+                  }else{
+                    return
+                  }
                 }else{
-                  return
+                  console.log("dont run")
                 }
+               
                
             })
             )
         }else{
             return
         }
+        
+   }catch(e){
+    console.log({e})
+   }
     }
 
 

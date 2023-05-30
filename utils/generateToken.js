@@ -127,7 +127,7 @@ const createCustomTokenForUser =async (address) => {
 )=> {
   console.log({interval})
   let date = new Date();
-  let startTime = Math.round(date.getTime() / (1000 * 60));
+const startTime = date.getTime() / 60000;
   let nextTime = startTime + interval
   let endSub = 30* 24 * 60
   return { startTime,nextTime,endSub };
