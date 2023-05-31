@@ -123,8 +123,8 @@ try{
 
 })
 
-const findUserReadings = async(MacAddress,val) => {
-  console.log(MacAddress)
+const findUserReadings = async(MacAddress,val = false) => {
+  console.log({MacAddress},"kkeokeookeko")
   // MacAddress ="24:62:AB:FC:A8:4C"
           // const reading =await Readings.find({[`$dynamicKey.${'24:682:AB:FC:A8:49'}.name`]: { "$exists": true } })
           const readingData = await Readings.find()
@@ -146,7 +146,7 @@ const findUserReadings = async(MacAddress,val) => {
  const latestReading = readings[readings.length-1] ? readings[readings.length-1].toObject() : readings[readings.length-1]
   console.log({latestReading})
           const {temperature,humidity,phVal} = latestReading[MacAddress]
-              const ts = latestReading.ts
+          const ts = latestReading[MacAddress].ts
           return {temperature,humidity,phVal,date:ts ?? new Date()}
             }
            
