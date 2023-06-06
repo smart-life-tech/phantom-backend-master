@@ -391,7 +391,7 @@ module.exports = function (io) {
   }
 
 
-  cron.schedule('*/5 * * * *',checkUserData)
+  // cron.schedule('*/5 * * * *',checkUserData)
 
 
   return router
