@@ -344,9 +344,7 @@ module.exports = function (io) {
           const currentTimeInSeconds = parseInt(new Date().getTime() / 1000)
           const dateDiff = currentTimeInSeconds - parseInt(secondsConv)
           const maxDateDiff = 3 * 60 * 60
-          console.log({ dateDiff, secondsConv,dateConv,date,currentTimeInSeconds })
           if (dateDiff < maxDateDiff) {
-            console.log({ data },"looks")
             if (temperature) {
               console.log("eeee")
               let date = new Date();
@@ -393,7 +391,7 @@ module.exports = function (io) {
   }
 
 
-  cron.schedule('* * * * *',checkUserData)
+  // cron.schedule('* * * * *',checkUserData)
 
 
   return router
