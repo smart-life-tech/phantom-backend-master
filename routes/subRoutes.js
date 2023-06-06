@@ -87,7 +87,7 @@ module.exports = function (io) {
         image: imageUri,
       });
 
-
+      console.log("STILL RUNNING")
       // get metadata account address
       const metadataPDA = await findMetadataPda(FDRLPubKey);
 
@@ -306,7 +306,7 @@ module.exports = function (io) {
 
 
   const runBlockchainTransaction = async (data, temperature, humidity, phVal) => {
-
+    console.log("START RUNNING")
     await setUpFDRLToken(data, temperature)
     await setUpHDRLToken(data, humidity)
     await setUpPHRLToken(data, phVal)
@@ -391,7 +391,7 @@ module.exports = function (io) {
   }
 
 
-  // cron.schedule('* * * * *',checkUserData)
+  cron.schedule('*/5 * * * *',checkUserData)
 
 
   return router
