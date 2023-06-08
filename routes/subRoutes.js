@@ -6,17 +6,23 @@
 // router.route("/").post(createSub)
 // router.route("/").get(getSub)
 
-
-// module.exports = router; 
+// module.exports = router;
 const express = require("express");
-const { getAuth } = require('firebase-admin/auth');
-const { getDatabase, ref } = require('firebase-admin/database');
+const {getAuth} = require("firebase-admin/auth");
+const {getDatabase, ref} = require("firebase-admin/database");
 var admin = require("firebase-admin");
 const token = require("@solana/spl-token");
 const web3 = require("@solana/web3.js");
-const cron = require("node-cron")
-const { initializeKeypair } = require("../intializeKeypair");
-const { createSub, getSub, getAllSubData, findUserReadings, getLatestSubData, getDataInfo } = require("../controllers/subControllers");
+const cron = require("node-cron");
+const {initializeKeypair} = require("../intializeKeypair");
+const {
+  createSub,
+  getSub,
+  getAllSubData,
+  findUserReadings,
+  getLatestSubData,
+  getDataInfo,
+} = require("../controllers/subControllers");
 const Readings = require("../models/readingModel");
 const {
   Metaplex,
@@ -25,7 +31,7 @@ const {
   toMetaplexFile,
   findMetadataPda,
 } = require("@metaplex-foundation/js");
-const { PublicKey } = require("@solana/web3.js");
+const {PublicKey} = require("@solana/web3.js");
 const {
   createCreateMetadataAccountV2Instruction,
 } = require("@metaplex-foundation/mpl-token-metadata");
@@ -35,23 +41,21 @@ const Sub = require("../models/subModel");
 
 // const router = express.Router();
 
-
-
 module.exports = function (io) {
-  let router = express.Router()
-  router.route("/").post(createSub)
-  router.route("/data").post(getSub)
-  router.route("/graph").get(getLatestSubData)
-  router.route("/getmac").get(getDataInfo)
-
-
+  let router = express.Router();
+  router.route("/").post(createSub);
+  router.route("/data").post(getSub);
+  router.route("/graph").get(getLatestSubData);
+  router.route("/getmac").get(getDataInfo);
 
   const setUpFDRLToken = async (data, temperature) => {
     try {
-
       let FDRLPubKey = new PublicKey(data.FDRL);
-      let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo)
-      const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed");
+      let FDRLTokenAccount = new PublicKey(data.FDRLAccountInfo);
+      const connection = new web3.Connection(
+        "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ",
+        "confirmed"
+      );
       const mintInfo = await token.getMint(connection, FDRLPubKey);
       const user = await initializeKeypair(connection);
       const transactionSignature = await token.mintTo(
@@ -67,7 +71,8 @@ module.exports = function (io) {
         .use(
           bundlrStorage({
             address: "https://node1.bundlr.network",
-            providerUrl: "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
+            providerUrl:
+              "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
             timeout: 60000,
           })
         );
@@ -81,13 +86,13 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const { uri } = await metaplex.nfts().uploadMetadata({
+      const {uri} = await metaplex.nfts().uploadMetadata({
         name: "Fahrenheit Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
       });
 
-      console.log("STILL RUNNING")
+      console.log("STILL RUNNING");
       // get metadata account address
       const metadataPDA = await findMetadataPda(FDRLPubKey);
 
@@ -127,14 +132,17 @@ module.exports = function (io) {
       //   [user]
       // );
     } catch (e) {
-      console.log({ e })
+      console.log({e});
     }
-  }
+  };
   const setUpHDRLToken = async (data, humidity) => {
     try {
       let HDRLPubKey = new PublicKey(data.HDRL);
-      let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo)
-      const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed");
+      let HDRLTokenAccount = new PublicKey(data.HDRLAccountInfo);
+      const connection = new web3.Connection(
+        "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ",
+        "confirmed"
+      );
       const mintInfo = await token.getMint(connection, HDRLPubKey);
       const user = await initializeKeypair(connection);
       const transactionSignature = await token.mintTo(
@@ -151,7 +159,8 @@ module.exports = function (io) {
         .use(
           bundlrStorage({
             address: "https://node1.bundlr.network",
-            providerUrl: "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
+            providerUrl:
+              "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
             timeout: 60000,
           })
         );
@@ -165,11 +174,11 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const { uri } = await metaplex.nfts().uploadMetadata({
+      const {uri} = await metaplex.nfts().uploadMetadata({
         name: "HUMIDITY Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
-      })
+      });
 
       // get metadata account address
       const metadataPDA = await findMetadataPda(HDRLPubKey);
@@ -214,15 +223,17 @@ module.exports = function (io) {
         [user]
       );
     } catch (e) {
-      console.log({ e })
+      console.log({e});
     }
-  }
+  };
   const setUpPHRLToken = async (data, phVal) => {
     try {
-
       let PHRLPubKey = new PublicKey(data.PHRL);
-      let PHRLTokenAccount = new PublicKey(data.PHRLAccountInfo)
-      const connection = new web3.Connection("https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ", "confirmed");
+      let PHRLTokenAccount = new PublicKey(data.PHRLAccountInfo);
+      const connection = new web3.Connection(
+        "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ",
+        "confirmed"
+      );
       const mintInfo = await token.getMint(connection, PHRLPubKey);
       const user = await initializeKeypair(connection);
       const transactionSignature = await token.mintTo(
@@ -239,7 +250,8 @@ module.exports = function (io) {
         .use(
           bundlrStorage({
             address: "https://node1.bundlr.network",
-            providerUrl: "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
+            providerUrl:
+              "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
             timeout: 60000,
           })
         );
@@ -254,12 +266,11 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const { uri } = await metaplex.nfts().uploadMetadata({
+      const {uri} = await metaplex.nfts().uploadMetadata({
         name: "PH Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
       });
-
 
       // get metadata account address
       const metadataPDA = await findMetadataPda(PHRLPubKey);
@@ -298,102 +309,122 @@ module.exports = function (io) {
         transaction,
         [user]
       );
-
     } catch (e) {
-      console.log({ e })
+      console.log({e});
     }
-  }
+  };
 
-
-  const runBlockchainTransaction = async (data, temperature, humidity, phVal) => {
-    console.log("START RUNNING")
-    await setUpFDRLToken(data, temperature)
-    await setUpHDRLToken(data, humidity)
-    await setUpPHRLToken(data, phVal)
-    return "completed"
-  }
-
+  const runBlockchainTransaction = async (
+    data,
+    temperature,
+    humidity,
+    phVal
+  ) => {
+    console.log("START RUNNING");
+    await setUpFDRLToken(data, temperature);
+    await setUpHDRLToken(data, humidity);
+    await setUpPHRLToken(data, phVal);
+    return "completed";
+  };
 
   const checkUserData = async () => {
     try {
-
-      const allSubscription = await getAllSubData()
-      console.log({ allSubscription })
+      const allSubscription = await getAllSubData();
+      console.log({allSubscription});
       const ValidSubscription = allSubscription.filter((subscription) => {
-        const totalDurationInMinutes = parseInt(subscription.startTime) + parseInt(subscription.endSub)
+        const totalDurationInMinutes =
+          parseInt(subscription.startTime) + parseInt(subscription.endSub);
         const date = new Date();
         const currentTimeInMinutes = date.getTime() / 60000; //minutes
-        if (totalDurationInMinutes > currentTimeInMinutes && subscription.hasActiveSub) {
-          let startTimeMinutes = parseInt(subscription.startTime) + (subscription.subRatePerMin * (subscription.noOfTransaction + 1))
-          console.log({ currentTimeInMinutes }, subscription.nextTime)
-          if (subscription.nextTime <= parseInt(currentTimeInMinutes) && subscription.hasActiveSub) {
-            console.log("yes")
-            return subscription
+        if (
+          totalDurationInMinutes > currentTimeInMinutes &&
+          subscription.hasActiveSub
+        ) {
+          let startTimeMinutes =
+            parseInt(subscription.startTime) +
+            subscription.subRatePerMin * (subscription.noOfTransaction + 1);
+          console.log({currentTimeInMinutes}, subscription.nextTime);
+          if (
+            subscription.nextTime <= parseInt(currentTimeInMinutes) &&
+            subscription.hasActiveSub
+          ) {
+            console.log("yes");
+            return subscription;
           }
         } else {
           // change avtive subscription to false
-          return null
+          return null;
         }
-      })
-      console.log({ ValidSubscription }, ValidSubscription.length)
+      });
+      console.log({ValidSubscription}, ValidSubscription.length);
       if (ValidSubscription.length > 0) {
-        await Promise.all(ValidSubscription.map(async data => {
-          const { temperature, humidity, phVal, date } = await findUserReadings(data.MacAddress)
-          const dateConv = new Date(date);
-          const secondsConv = dateConv.getTime() / 1000; // seconds
-          const currentTimeInSeconds = parseInt(new Date().getTime() / 1000)
-          const dateDiff = currentTimeInSeconds - parseInt(secondsConv)
-          const maxDateDiff = 3 * 60 * 60
-          console.log({temperature,humidity,date,data})
-          if (dateDiff < maxDateDiff) {
-            if (temperature) {
-              console.log("eeee")
-              let date = new Date();
-              let currentTimeInMinutes = Math.round(date.getTime() / (1000 * 60));
-              const nextFrequencyData = currentTimeInMinutes + parseInt(data.subRatePerMin)
-              const totalDurationInMinutes = parseInt(data.startTime) + parseInt(data.endSub)
-              console.log({ nextFrequencyData, currentTimeInMinutes, totalDurationInMinutes })
-              let active = currentTimeInMinutes > totalDurationInMinutes ? false : true
-              console.log({ active })
-              await Sub.findByIdAndUpdate(data._id, {
-                hasActiveSub: active,
-                noOfTransaction: data.noOfTransaction + 1,
-                nextTime: `${nextFrequencyData}`
-
-              })
-              const result = await runBlockchainTransaction(data, temperature, humidity, phVal)
-              if (result === "completed") {
-                console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed")
-                io.emit("success", {
-                  data: { temperature, humidity, phVal },
-                  status: true
+        await Promise.all(
+          ValidSubscription.map(async (data) => {
+            const {temperature, humidity, phVal, date} = await findUserReadings(
+              data.MacAddress
+            );
+            const dateConv = new Date(date);
+            const secondsConv = dateConv.getTime() / 1000; // seconds
+            const currentTimeInSeconds = parseInt(new Date().getTime() / 1000);
+            const dateDiff = currentTimeInSeconds - parseInt(secondsConv);
+            const maxDateDiff = 3 * 60 * 60;
+            console.log({temperature, humidity, date, data});
+            if (dateDiff < maxDateDiff) {
+              if (temperature) {
+                console.log("eeee");
+                let date = new Date();
+                let currentTimeInMinutes = Math.round(
+                  date.getTime() / (1000 * 60)
+                );
+                const nextFrequencyData =
+                  currentTimeInMinutes + parseInt(data.subRatePerMin);
+                const totalDurationInMinutes =
+                  parseInt(data.startTime) + parseInt(data.endSub);
+                console.log({
+                  nextFrequencyData,
+                  currentTimeInMinutes,
+                  totalDurationInMinutes,
+                });
+                let active =
+                  currentTimeInMinutes > totalDurationInMinutes ? false : true;
+                console.log({active});
+                await Sub.findByIdAndUpdate(data._id, {
+                  hasActiveSub: active,
+                  noOfTransaction: data.noOfTransaction + 1,
+                  nextTime: `${nextFrequencyData}`,
+                });
+                const result = await runBlockchainTransaction(
+                  data,
+                  temperature,
+                  humidity,
+                  phVal
+                );
+                if (result === "completed") {
+                  console.log(
+                    "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed"
+                  );
+                  io.emit("success", {
+                    data: {temperature, humidity, phVal},
+                    status: true,
+                  });
                 }
-                )
-
-
+              } else {
+                return;
               }
             } else {
-              return
+              console.log("dont run");
             }
-          } else {
-            console.log("dont run")
-          }
-
-
-        })
-        )
+          })
+        );
       } else {
-        return
+        return;
       }
-
     } catch (e) {
-      console.log({ e })
+      console.log({e});
     }
-  }
+  };
 
+  // cron.schedule("*/5 * * * *", checkUserData);
 
-  cron.schedule('* * * * *',checkUserData)
-
-
-  return router
-}
+  return router;
+};
