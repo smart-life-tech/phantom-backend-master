@@ -355,7 +355,6 @@ module.exports = function (io) {
           return null;
         }
       });
-      console.log({ValidSubscription}, ValidSubscription.length);
       if (ValidSubscription.length > 0) {
         await Promise.all(
           ValidSubscription.map(async (data) => {
@@ -377,24 +376,20 @@ module.exports = function (io) {
                   currentTimeInMinutes + parseInt(data.subRatePerMin);
                 const totalDurationInMinutes =
                   parseInt(data.startTime) + parseInt(data.endSub);
-                console.log({
-                  nextFrequencyData,
-                  currentTimeInMinutes,
-                  totalDurationInMinutes,
-                });
+
                 let active =
                   currentTimeInMinutes > totalDurationInMinutes ? false : true;
-                console.log(
-                  {active, temperature, phVal, humidity, email: data.email},
-                  "iejeijeijie  h3uhu3uu  HEHYEHYEY"
-                );
+
                 await Sub.findByIdAndUpdate(data._id, {
                   hasActiveSub: active,
                   noOfTransaction: data.noOfTransaction + 1,
                   nextTime: `${nextFrequencyData}`,
-                  $push: {tempValues: temperature},
-                  $push: {phValues: phVal},
-                  $push: {humidValues: humidity},
+                  $push: {
+                    tempValues: `${temperature}`, // Add value to array1
+                    phValues: `${phVal}`, // Add value to array2
+                    humidValues: `${humidity}`, // Add value to array3
+                    time: `${new Date().getTime()}`,
+                  },
                 });
                 const result = await runBlockchainTransaction(
                   data,
@@ -415,7 +410,7 @@ module.exports = function (io) {
                 return;
               }
             } else {
-              console.log("dont run");
+              console.log("dont run", {email: data.email});
             }
           })
         );
@@ -427,7 +422,7 @@ module.exports = function (io) {
     }
   };
 
-  cron.schedule("* * * * *", checkUserData);
+  // cron.schedule("*/5 * * * *", checkUserData);
 
   return router;
 };

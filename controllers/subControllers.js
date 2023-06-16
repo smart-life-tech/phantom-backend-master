@@ -45,6 +45,10 @@ const createSub = asyncHandler(async (req, res) => {
             startTime,
             nextTime,
             endSub,
+            phValues: [],
+            tempValues: [],
+            humidValues: [],
+            time: [],
             noOfTransaction: 0,
           });
           // const reading = Readings.findOne({[`${'24:62:AB:FC:A8:4C'}.name`]: { "$exists": true } })
@@ -98,6 +102,14 @@ const getSub = asyncHandler(async (req, res) => {
           },
           {new: true}
         );
+        await Sub.findByIdAndUpdate(
+          user.id,
+          {
+            MacAddress: IP,
+          },
+          {new: true}
+        );
+        console.log("mekeke kekkek");
         res.json({
           reading: latestReading,
           status: true,
@@ -137,7 +149,12 @@ const findUserReadings = async (MacAddress, val = false) => {
         : readings[readings.length - 1];
       const {temperature, humidity, phVal} = latestReading[MacAddress];
       const ts = latestReading[MacAddress].ts;
-      return {temperature, humidity, phVal, date: ts ?? new Date()};
+      return {
+        temperature,
+        humidity,
+        phVal,
+        date: ts ?? new Date(),
+      };
     }
   } else {
     return {temperature: "", humidity: "", phVal: ""};
@@ -152,7 +169,6 @@ const getLatestSubData = asyncHandler(async (req, res) => {
   if (userInfo.MacAddress) {
     const sub = await Sub.findOne({email: userInfo.email});
     console.log({sub});
-
     if (sub) {
       res.json({
         tempToken: sub.FDRLAccountInfo,
@@ -161,6 +177,10 @@ const getLatestSubData = asyncHandler(async (req, res) => {
         walletAddress: sub.walletKey,
         status: true,
         interval: userInfo.subRatePerMin,
+        time: sub.time,
+        phValues: sub.phValues,
+        tempValues: sub.tempValues,
+        humidValues: sub.humidValues,
       });
     } else {
       res.json({

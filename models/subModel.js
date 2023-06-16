@@ -41,15 +41,19 @@ const subSchema = mongoose.Schema(
     endSub: {type: String},
     noOfTransaction: {type: Number, default: 0},
     phValues: {
-      type: [Number],
+      type: [String],
       default: [],
     },
     tempValues: {
-      type: [Number],
+      type: [String],
       default: [],
     },
     humidValues: {
-      type: [Number],
+      type: [String],
+      default: [],
+    },
+    time: {
+      type: [String],
       default: [],
     },
   },
