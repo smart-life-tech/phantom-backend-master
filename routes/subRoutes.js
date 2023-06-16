@@ -324,13 +324,13 @@ module.exports = function (io) {
     await setUpFDRLToken(data, temperature);
     await setUpHDRLToken(data, humidity);
     await setUpPHRLToken(data, phVal);
+    console.log("RAN ALL");
     return "completed";
   };
 
   const checkUserData = async () => {
     try {
       const allSubscription = await getAllSubData();
-      console.log({allSubscription});
       const ValidSubscription = allSubscription.filter((subscription) => {
         const totalDurationInMinutes =
           parseInt(subscription.startTime) + parseInt(subscription.endSub);
@@ -343,7 +343,6 @@ module.exports = function (io) {
           let startTimeMinutes =
             parseInt(subscription.startTime) +
             subscription.subRatePerMin * (subscription.noOfTransaction + 1);
-          console.log({currentTimeInMinutes}, subscription.nextTime);
           if (
             subscription.nextTime <= parseInt(currentTimeInMinutes) &&
             subscription.hasActiveSub
@@ -368,10 +367,8 @@ module.exports = function (io) {
             const currentTimeInSeconds = parseInt(new Date().getTime() / 1000);
             const dateDiff = currentTimeInSeconds - parseInt(secondsConv);
             const maxDateDiff = 3 * 60 * 60;
-            console.log({temperature, humidity, date, data});
             if (dateDiff < maxDateDiff) {
               if (temperature) {
-                console.log("eeee");
                 let date = new Date();
                 let currentTimeInMinutes = Math.round(
                   date.getTime() / (1000 * 60)
@@ -387,11 +384,17 @@ module.exports = function (io) {
                 });
                 let active =
                   currentTimeInMinutes > totalDurationInMinutes ? false : true;
-                console.log({active});
+                console.log(
+                  {active, temperature, phVal, humidity, email: data.email},
+                  "iejeijeijie  h3uhu3uu  HEHYEHYEY"
+                );
                 await Sub.findByIdAndUpdate(data._id, {
                   hasActiveSub: active,
                   noOfTransaction: data.noOfTransaction + 1,
                   nextTime: `${nextFrequencyData}`,
+                  $push: {tempValues: temperature},
+                  $push: {phValues: phVal},
+                  $push: {humidValues: humidity},
                 });
                 const result = await runBlockchainTransaction(
                   data,
@@ -424,7 +427,7 @@ module.exports = function (io) {
     }
   };
 
-  cron.schedule("*/5 * * * *", checkUserData);
+  cron.schedule("* * * * *", checkUserData);
 
   return router;
 };

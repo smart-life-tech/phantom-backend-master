@@ -5,7 +5,7 @@ const subSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    userID:{type:String,required:true},
+    userID: {type: String, required: true},
     subRatePerMin: {
       type: Number,
       required: true,
@@ -29,17 +29,29 @@ const subSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    HDRLAccountInfo: { type: String, },
-    FDRLAccountInfo: { type: String, },
-    PHRLAccountInfo: { type: String, },
-    HDRL: { type: String, },
-    FDRL: { type: String, },
-    PHRL: { type: String, },
-    durationInMinutes:{type:String},
-    startTime:{ type: String, },
-    nextTime:{ type: String, },
-    endSub:{ type: String, },
-    noOfTransaction:{type:Number,default:0}
+    HDRLAccountInfo: {type: String},
+    FDRLAccountInfo: {type: String},
+    PHRLAccountInfo: {type: String},
+    HDRL: {type: String},
+    FDRL: {type: String},
+    PHRL: {type: String},
+    durationInMinutes: {type: String},
+    startTime: {type: String},
+    nextTime: {type: String},
+    endSub: {type: String},
+    noOfTransaction: {type: Number, default: 0},
+    phValues: {
+      type: [Number],
+      default: [],
+    },
+    tempValues: {
+      type: [Number],
+      default: [],
+    },
+    humidValues: {
+      type: [Number],
+      default: [],
+    },
   },
   {
     timestamps: true,
@@ -47,4 +59,4 @@ const subSchema = mongoose.Schema(
 );
 
 const Sub = mongoose.model("subs", subSchema);
-module.exports = Sub
+module.exports = Sub;
