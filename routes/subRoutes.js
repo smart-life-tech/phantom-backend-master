@@ -23,7 +23,6 @@ const {
   getLatestSubData,
   getDataInfo,
 } = require("../controllers/subControllers");
-const Readings = require("../models/readingModel");
 const {
   Metaplex,
   keypairIdentity,
@@ -372,6 +371,7 @@ module.exports = function (io) {
                 let currentTimeInMinutes = Math.round(
                   date.getTime() / (1000 * 60)
                 );
+
                 const nextFrequencyData =
                   currentTimeInMinutes + parseInt(data.subRatePerMin);
                 const totalDurationInMinutes =
@@ -379,18 +379,50 @@ module.exports = function (io) {
 
                 let active =
                   currentTimeInMinutes > totalDurationInMinutes ? false : true;
+                const newData = await Sub.findById(data._id);
+                console.log({newData});
+                if (newData?.tempValues?.length > 15) {
+                  await Sub.findByIdAndUpdate(data._id, {
+                    hasActiveSub: active,
+                    noOfTransaction: data.noOfTransaction + 1,
+                    nextTime: `${nextFrequencyData}`,
+                    tempValues: [
+                      ...newData.tempValues.slice(
+                        newData.tempValues.length - 15
+                      ),
+                      `${temperature}`,
+                    ],
+                    phValues: [
+                      ...newData.phValues.slice(newData.phValues.length - 15),
+                      phVal,
+                    ],
+                    humidValues: [
+                      ...newData.humidValues.slice(
+                        newData.phValues.length - 15
+                      ),
+                      `${humidity}`,
+                    ],
+                    time: [
+                      ...newData.time.slice(newData.time.length - 15),
+                      `${new Date().getTime()}`,
+                    ],
+                  });
+                } else {
+                  await Sub.findByIdAndUpdate(data._id, {
+                    hasActiveSub: active,
+                    noOfTransaction: data.noOfTransaction + 1,
+                    nextTime: `${nextFrequencyData}`,
+                    $push: {
+                      tempValues: `${temperature}`, // Add value to array1
+                      phValues: `${phVal}`, // Add value to array2
+                      humidValues: `${humidity}`, // Add value to array3
+                      time: `${new Date().getTime()}`,
+                    },
+                  });
+                }
 
-                await Sub.findByIdAndUpdate(data._id, {
-                  hasActiveSub: active,
-                  noOfTransaction: data.noOfTransaction + 1,
-                  nextTime: `${nextFrequencyData}`,
-                  $push: {
-                    tempValues: `${temperature}`, // Add value to array1
-                    phValues: `${phVal}`, // Add value to array2
-                    humidValues: `${humidity}`, // Add value to array3
-                    time: `${new Date().getTime()}`,
-                  },
-                });
+                // }
+
                 const result = await runBlockchainTransaction(
                   data,
                   temperature,
@@ -422,7 +454,7 @@ module.exports = function (io) {
     }
   };
 
-  cron.schedule("*/5 * * * *", checkUserData);
+  // cron.schedule("* * * * *", checkUserData);
 
   return router;
 };

@@ -8,6 +8,11 @@ const {
 } = require("../utils/generateToken");
 const Readings = require("../models/readingModel");
 const User = require("../models/userModel");
+const MongoClient = require("mongodb").MongoClient;
+
+// Connection URL and database name
+const url = process.env.MONGO_URI;
+const dbName = "iot";
 
 const createSub = asyncHandler(async (req, res) => {
   const {
@@ -109,7 +114,6 @@ const getSub = asyncHandler(async (req, res) => {
           },
           {new: true}
         );
-        console.log("mekeke kekkek");
         res.json({
           reading: latestReading,
           status: true,
@@ -147,12 +151,26 @@ const findUserReadings = async (MacAddress, val = false) => {
       const latestReading = readings[readings.length - 1]
         ? readings[readings.length - 1].toObject()
         : readings[readings.length - 1];
-      const {temperature, humidity, phVal} = latestReading[MacAddress];
+      const {
+        temperature,
+        humidity,
+        phVal,
+        ph1,
+        ph2,
+        water,
+        ecsensor,
+        waterLevel,
+      } = latestReading[MacAddress];
       const ts = latestReading[MacAddress].ts;
       return {
         temperature,
         humidity,
         phVal,
+        ph1,
+        ph2,
+        water,
+        ecsensor,
+        waterLevel,
         date: ts ?? new Date(),
       };
     }
@@ -164,11 +182,9 @@ const findUserReadings = async (MacAddress, val = false) => {
 const getLatestSubData = asyncHandler(async (req, res) => {
   const user = checkToken(req.headers.authorization.split(" ")[1]);
   const userInfo = await User.findById(user.id);
-  // console.log({userInfo});
 
   if (userInfo.MacAddress) {
     const sub = await Sub.findOne({email: userInfo.email});
-    console.log({sub});
     if (sub) {
       res.json({
         tempToken: sub.FDRLAccountInfo,
@@ -199,10 +215,11 @@ const getLatestSubData = asyncHandler(async (req, res) => {
 const getDataInfo = asyncHandler(async (req, res) => {
   const user = checkToken(req.headers.authorization.split(" ")[1]);
   const userInfo = await User.findById(user.id);
-
+  const findUserData = await findUserReadings(userInfo.MacAddress);
   if (userInfo) {
     res.json({
-      data: userInfo,
+      data: {MacAddress: userInfo.MacAddress, _id: userInfo._id},
+      extra: {...findUserData},
       status: true,
     });
   } else {
@@ -212,7 +229,6 @@ const getDataInfo = asyncHandler(async (req, res) => {
     });
   }
 });
-
 const getAllSubData = async () => {
   const subData = await Sub.find();
   return subData;
