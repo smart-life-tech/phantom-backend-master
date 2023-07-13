@@ -357,9 +357,8 @@ module.exports = function (io) {
       if (ValidSubscription.length > 0) {
         await Promise.all(
           ValidSubscription.map(async (data) => {
-            const {temperature, humidity, phVal, date} = await findUserReadings(
-              data.MacAddress
-            );
+            const {temperature, humidity, phVal, date, ecSensor, waterLevel} =
+              await findUserReadings(data.MacAddress);
             const dateConv = new Date(date);
             const secondsConv = dateConv.getTime() / 1000; // seconds
             const currentTimeInSeconds = parseInt(new Date().getTime() / 1000);
@@ -421,8 +420,6 @@ module.exports = function (io) {
                   });
                 }
 
-                // }
-
                 const result = await runBlockchainTransaction(
                   data,
                   temperature,
@@ -454,7 +451,7 @@ module.exports = function (io) {
     }
   };
 
-  // cron.schedule("* * * * *", checkUserData);
+  cron.schedule("* * * * *", checkUserData);
 
   return router;
 };
