@@ -34,6 +34,10 @@ const subSchema = mongoose.Schema(
     PHRLAccountInfo: {type: String},
     HDRL: {type: String},
     FDRL: {type: String},
+    ECRLAccountInfo: {type: String},
+    WARLAccountInfo: {type: String},
+    ECRL: {type: String},
+    WARL: {type: String},
     PHRL: {type: String},
     durationInMinutes: {type: String},
     startTime: {type: String},
@@ -41,6 +45,14 @@ const subSchema = mongoose.Schema(
     endSub: {type: String},
     noOfTransaction: {type: Number, default: 0},
     phValues: {
+      type: [String],
+      default: [],
+    },
+    ecValues: {
+      type: [String],
+      default: [],
+    },
+    waterValues: {
       type: [String],
       default: [],
     },

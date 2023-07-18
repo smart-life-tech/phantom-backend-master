@@ -99,6 +99,7 @@ const getSub = asyncHandler(async (req, res) => {
       const latestReading = readings[readings.length - 1]
         ? readings[readings.length - 1].toObject()
         : null;
+      console.log("UPDATING");
       if (latestReading) {
         const updateMac = await User.findByIdAndUpdate(
           user.id,
@@ -107,8 +108,11 @@ const getSub = asyncHandler(async (req, res) => {
           },
           {new: true}
         );
+        console.log({updateMac, userInfo});
+        const subInfo = await Sub.findOne({email: userInfo.email});
+        console.log({subInfo});
         await Sub.findByIdAndUpdate(
-          user.id,
+          subInfo.id,
           {
             MacAddress: IP,
           },
@@ -151,6 +155,7 @@ const findUserReadings = async (MacAddress, val = false) => {
       const latestReading = readings[readings.length - 1]
         ? readings[readings.length - 1].toObject()
         : readings[readings.length - 1];
+      console.log({latestReading});
       const {
         temperature,
         humidity,
@@ -158,8 +163,8 @@ const findUserReadings = async (MacAddress, val = false) => {
         ph1,
         ph2,
         water,
-        ecsensor,
-        waterLevel,
+        ecSensor,
+        waterlevel,
       } = latestReading[MacAddress];
       const ts = latestReading[MacAddress].ts;
       return {
@@ -169,8 +174,8 @@ const findUserReadings = async (MacAddress, val = false) => {
         ph1,
         ph2,
         water,
-        ecsensor,
-        waterLevel,
+        ecSensor,
+        waterlevel,
         date: ts ?? new Date(),
       };
     }
@@ -188,6 +193,8 @@ const getLatestSubData = asyncHandler(async (req, res) => {
     if (sub) {
       res.json({
         tempToken: sub.FDRLAccountInfo,
+        ecToken: sub.ECRLAccountInfo,
+        waterToken: sub.WARLAccountInfo,
         humidityToken: sub.HDRLAccountInfo,
         phToken: sub.PHRLAccountInfo,
         walletAddress: sub.walletKey,
@@ -195,6 +202,8 @@ const getLatestSubData = asyncHandler(async (req, res) => {
         interval: userInfo.subRatePerMin,
         time: sub.time,
         phValues: sub.phValues,
+        ecValues: sub.ecValues,
+        waterValues: sub.waterValues,
         tempValues: sub.tempValues,
         humidValues: sub.humidValues,
       });

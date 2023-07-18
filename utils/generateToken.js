@@ -111,6 +111,64 @@ const createCustomTokenForUser = async (address) => {
     console.log({error});
   }
 };
+const createECSensorTokenForUser = async (address) => {
+  try {
+    const connection = new web3.Connection(
+      "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
+      "confirmed"
+    ); //lts test this
+    const user = await initializeKeypair(connection);
+
+    const decimals = 4;
+    const myAddress = new PublicKey(address);
+    console.log({myAddress, user, decimals}, user.publicKey);
+    // const owner = user.publicKey;
+
+    const ECRL = await token.createMint(
+      connection,
+      user,
+      user.publicKey,
+      user.publicKey,
+      decimals
+    );
+    const WARL = await token.createMint(
+      connection,
+      user,
+      user.publicKey,
+      user.publicKey,
+      decimals
+    );
+    const newECRLAccount = await token.createAssociatedTokenAccount(
+      connection,
+      user,
+      ECRL,
+      myAddress
+    );
+    const newWARLAccount = await token.createAssociatedTokenAccount(
+      connection,
+      user,
+      WARL,
+      myAddress
+    );
+    const ECRLAccountInfo = await token.getAccount(connection, newECRLAccount);
+    console.log({
+      ECRLAccountInfo: ECRLAccountInfo.address.toBase58(),
+    });
+    const WARLAccountInfo = await token.getAccount(connection, newWARLAccount);
+    console.log({
+      WARLAccountInfo: WARLAccountInfo.address.toBase58(),
+    });
+
+    return {
+      ECRLAccountInfo: ECRLAccountInfo.address.toBase58(),
+      ECRL: ECRL.toBase58(),
+      WARLAccountInfo: WARLAccountInfo.address.toBase58(),
+      WARL: WARL.toBase58(),
+    };
+  } catch (error) {
+    console.log({error});
+  }
+};
 
 const changeFrequencyTodays = (interval) => {
   console.log({interval});
@@ -127,4 +185,5 @@ module.exports = {
   checkToken,
   createCustomTokenForUser,
   changeFrequencyTodays,
+  createECSensorTokenForUser,
 };

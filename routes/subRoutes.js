@@ -37,6 +37,7 @@ const {
 const fs = require("fs");
 
 const Sub = require("../models/subModel");
+const {createECSensorTokenForUser} = require("../utils/generateToken");
 
 // const router = express.Router();
 
@@ -111,6 +112,180 @@ module.exports = function (io) {
           {
             metadata: metadataPDA,
             mint: FDRLPubKey,
+            mintAuthority: user.publicKey,
+            payer: user.publicKey,
+            updateAuthority: user.publicKey,
+          },
+          {
+            createMetadataAccountArgsV2: {
+              data: tokenMetadata,
+              isMutable: true,
+            },
+          }
+        )
+      );
+
+      // send transaction
+      // const transactionSignature2 = await web3.sendAndConfirmTransaction(
+      //   connection,
+      //   transaction,
+      //   [user]
+      // );
+    } catch (e) {
+      console.log({e});
+    }
+  };
+  const setUpECRLToken = async (data, ecSensor) => {
+    try {
+      let ECRLPubKey = new PublicKey(data.ECRL);
+      let ECRLTokenAccount = new PublicKey(data.ECRLAccountInfo);
+      const connection = new web3.Connection(
+        "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ",
+        "confirmed"
+      );
+      const mintInfo = await token.getMint(connection, ECRLPubKey);
+      const user = await initializeKeypair(connection);
+      const transactionSignature = await token.mintTo(
+        connection,
+        user,
+        ECRLPubKey,
+        ECRLTokenAccount,
+        user, // Replace `user` with the receiver's public key
+        parseFloat(ecSensor.toFixed(2)) * 10 ** mintInfo.decimals
+      );
+      const metaplex = Metaplex.make(connection)
+        .use(keypairIdentity(user))
+        .use(
+          bundlrStorage({
+            address: "https://node1.bundlr.network",
+            providerUrl:
+              "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
+            timeout: 60000,
+          })
+        );
+      // file to buffer
+      const buffer = fs.readFileSync("assets/fara.jpeg");
+
+      // buffer to metaplex file
+      const file = toMetaplexFile(buffer, "fara.jpeg");
+
+      // upload image and get image uri
+      const imageUri = await metaplex.storage().upload(file);
+
+      // upload metadata and get metadata uri (off chain metadata)
+      const {uri} = await metaplex.nfts().uploadMetadata({
+        name: "EC Sensor Root Labs COIN",
+        description: "for all workers of the world",
+        image: imageUri,
+      });
+
+      console.log("STILL RUNNING");
+      // get metadata account address
+      const metadataPDA = await findMetadataPda(ECRLPubKey);
+
+      // onchain metadata format
+      const tokenMetadata = {
+        name: "EC Sensor Root Labs COIN",
+        symbol: "ERLC",
+        uri: uri,
+        sellerFeeBasisPoints: 0,
+        creators: null,
+        collection: null,
+        uses: null,
+      };
+      // transaction to create metadata account
+      const transaction = new web3.Transaction().add(
+        createCreateMetadataAccountV2Instruction(
+          {
+            metadata: metadataPDA,
+            mint: ECRLPubKey,
+            mintAuthority: user.publicKey,
+            payer: user.publicKey,
+            updateAuthority: user.publicKey,
+          },
+          {
+            createMetadataAccountArgsV2: {
+              data: tokenMetadata,
+              isMutable: true,
+            },
+          }
+        )
+      );
+
+      // send transaction
+      // const transactionSignature2 = await web3.sendAndConfirmTransaction(
+      //   connection,
+      //   transaction,
+      //   [user]
+      // );
+    } catch (e) {
+      console.log({e});
+    }
+  };
+  const setUpWARLToken = async (data, waterlevel) => {
+    try {
+      let WARLPubKey = new PublicKey(data.WARL);
+      let WARLTokenAccount = new PublicKey(data.WARLAccountInfo);
+      const connection = new web3.Connection(
+        "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc ",
+        "confirmed"
+      );
+      const mintInfo = await token.getMint(connection, WARLPubKey);
+      const user = await initializeKeypair(connection);
+      const transactionSignature = await token.mintTo(
+        connection,
+        user,
+        WARLPubKey,
+        WARLTokenAccount,
+        user, // Replace `user` with the receiver's public key
+        parseFloat(waterlevel.toFixed(2)) * 10 ** mintInfo.decimals
+      );
+      const metaplex = Metaplex.make(connection)
+        .use(keypairIdentity(user))
+        .use(
+          bundlrStorage({
+            address: "https://node1.bundlr.network",
+            providerUrl:
+              "https://solana-api.syndica.io/access-token/zUgRFScqFcVnQm688ippwlL9R2BrI1qH7nXzjub9z9X7CslBRYxEGyXCGiZm4rq6/rpc",
+            timeout: 60000,
+          })
+        );
+      // file to buffer
+      const buffer = fs.readFileSync("assets/fara.jpeg");
+
+      // buffer to metaplex file
+      const file = toMetaplexFile(buffer, "fara.jpeg");
+
+      // upload image and get image uri
+      const imageUri = await metaplex.storage().upload(file);
+
+      // upload metadata and get metadata uri (off chain metadata)
+      const {uri} = await metaplex.nfts().uploadMetadata({
+        name: "Water level Root Labs COIN",
+        description: "for all workers of the world",
+        image: imageUri,
+      });
+
+      console.log("STILL RUNNING");
+      // get metadata account address
+      const metadataPDA = await findMetadataPda(WARLPubKey);
+
+      // onchain metadata format
+      const tokenMetadata = {
+        name: "Water level Root Labs COIN",
+        symbol: "WRLC",
+        uri: uri,
+        sellerFeeBasisPoints: 0,
+        creators: null,
+        collection: null,
+        uses: null,
+      };
+      // transaction to create metadata account
+      const transaction = new web3.Transaction().add(
+        createCreateMetadataAccountV2Instruction(
+          {
+            metadata: metadataPDA,
+            mint: WARLPubKey,
             mintAuthority: user.publicKey,
             payer: user.publicKey,
             updateAuthority: user.publicKey,
@@ -317,12 +492,17 @@ module.exports = function (io) {
     data,
     temperature,
     humidity,
-    phVal
+    phVal,
+    ecSensor,
+    waterlevel
   ) => {
+    console.log({data, temperature, humidity, phVal, ecSensor, waterlevel});
     console.log("START RUNNING");
     await setUpFDRLToken(data, temperature);
     await setUpHDRLToken(data, humidity);
     await setUpPHRLToken(data, phVal);
+    await setUpECRLToken(data, ecSensor);
+    await setUpWARLToken(data, waterlevel);
     console.log("RAN ALL");
     return "completed";
   };
@@ -357,7 +537,7 @@ module.exports = function (io) {
       if (ValidSubscription.length > 0) {
         await Promise.all(
           ValidSubscription.map(async (data) => {
-            const {temperature, humidity, phVal, date, ecSensor, waterLevel} =
+            const {temperature, humidity, phVal, date, ecSensor, waterlevel} =
               await findUserReadings(data.MacAddress);
             const dateConv = new Date(date);
             const secondsConv = dateConv.getTime() / 1000; // seconds
@@ -380,6 +560,16 @@ module.exports = function (io) {
                   currentTimeInMinutes > totalDurationInMinutes ? false : true;
                 const newData = await Sub.findById(data._id);
                 console.log({newData});
+                if (ecSensor && !newData.ECRL) {
+                  console.log("MAKE WAY FOR ECSENSOR, ");
+                  const createdNewToken = await createECSensorTokenForUser(
+                    data.walletKey
+                  );
+                  console.log({createdNewToken}, "VREATED");
+                  await Sub.findByIdAndUpdate(data._id, {
+                    ...createdNewToken,
+                  });
+                }
                 if (newData?.tempValues?.length > 15) {
                   await Sub.findByIdAndUpdate(data._id, {
                     hasActiveSub: active,
@@ -419,12 +609,34 @@ module.exports = function (io) {
                     },
                   });
                 }
-
+                if (newData?.ecValues?.length > 15) {
+                  await Sub.findByIdAndUpdate(data._id, {
+                    ecValues: [
+                      ...newData.ecValues.slice(newData.ecValues.length - 15),
+                      `${ecSensor}`,
+                    ],
+                    waterValues: [
+                      ...newData.waterValues.slice(
+                        newData.waterValues.length - 15
+                      ),
+                      `${waterlevel}`,
+                    ],
+                  });
+                } else {
+                  await Sub.findByIdAndUpdate(data._id, {
+                    $push: {
+                      ecValues: `${ecSensor}`, // Add value to array1
+                      waterValues: `${waterlevel}`,
+                    },
+                  });
+                }
                 const result = await runBlockchainTransaction(
                   data,
                   temperature,
                   humidity,
-                  phVal
+                  phVal,
+                  ecSensor,
+                  waterlevel
                 );
                 if (result === "completed") {
                   console.log(
@@ -451,7 +663,7 @@ module.exports = function (io) {
     }
   };
 
-  cron.schedule("* * * * *", checkUserData);
+  // cron.schedule("* * * * *", checkUserData);
 
   return router;
 };
