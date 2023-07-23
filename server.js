@@ -7,14 +7,30 @@ const subRoutes = require("./routes/subRoutes")
 const path = require("path")
 const cors = require('cors')
 
-
-
 const app = express();
 dotenv.config();
 connectDB();
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(cors())
+// app.use(cors())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+app.use(cors({
+    origin: '*',
+    // origin: function (origin, callback) {
+    //   if (whitelist.indexOf(origin) !== -1) {
+    //     callback(null, true)
+    //   } else {
+    //     callback(new Error('Not allowed by CORS'))
+    //   }
+    // },
+    methods:['GET','PUT','POST','DELETE'],
+    credentials: true
+}
+))
+
+
 
 app.get("/", (req,res) => {
   res.send("App is running")
@@ -24,7 +40,7 @@ app.get("/api/notes", (req, res) => {
   res.json(notes);
 })
 app.use("/api/users", userRoutes)
-app.use("/api/sub", subRoutes)
+// app.use("/api/sub", subRoutes)
 
 //-------------------------------Deployment-----------------------------------------------
 
@@ -41,4 +57,14 @@ app.use("/api/sub", subRoutes)
 
 
 const PORT = process.env.PORT ||  5000;
-app.listen(PORT, console.log(`Sever started on port ${PORT}`))
+let Server =app.listen(PORT, console.log(`Sever started on port ${PORT}`))
+
+
+let io = (require("socket.io"))(Server, {
+  cors: {
+    origin: '*',
+  }
+})
+
+app.use("/api/users", userRoutes)
+app.use("/api/sub", subRoutes(io))

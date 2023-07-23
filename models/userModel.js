@@ -12,6 +12,9 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    MacAddress: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,
@@ -32,6 +35,9 @@ const userSchema = mongoose.Schema(
       required: true,
       default: "jesusIsAwinnerMan"
     },
+    splToken1: { type: String, },
+    splToken2: { type: String, },
+    splToken3: { type: String, },
   },
   {
     timestamps: true,
