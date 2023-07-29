@@ -190,6 +190,8 @@ const getLatestSubData = asyncHandler(async (req, res) => {
 
   if (userInfo.MacAddress) {
     const sub = await Sub.findOne({email: userInfo.email});
+    const resData = await findUserReadings(userInfo.MacAddress);
+    console.log({resData});
     if (sub) {
       res.json({
         tempToken: sub.FDRLAccountInfo,
@@ -206,6 +208,7 @@ const getLatestSubData = asyncHandler(async (req, res) => {
         waterValues: sub.waterValues,
         tempValues: sub.tempValues,
         humidValues: sub.humidValues,
+        ...resData,
       });
     } else {
       res.json({
