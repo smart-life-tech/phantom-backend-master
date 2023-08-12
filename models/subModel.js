@@ -22,7 +22,6 @@ const subSchema = mongoose.Schema(
     MacAddress: {
       type: String,
       required: true,
-      unique: true,
     },
     walletKey: {
       type: String,

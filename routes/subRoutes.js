@@ -663,7 +663,7 @@ module.exports = function (io) {
     }
   };
 
-  // cron.schedule("* * * * *", checkUserData);
+  cron.schedule("* * * * */10", checkUserData);
 
   return router;
 };
