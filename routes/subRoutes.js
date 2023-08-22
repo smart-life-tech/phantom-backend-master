@@ -321,7 +321,6 @@ module.exports = function (io) {
     humidity,
     phVal
   ) => {
-    console.log({data, temperature, humidity, phVal});
     console.log("START RUNNING");
     await setUpFDRLToken(data, temperature);
     await setUpHDRLToken(data, humidity);
@@ -333,7 +332,6 @@ module.exports = function (io) {
   const checkUserData = async () => {
     try {
       const allSubscription = await getAllSubData();
-      console.log({allSubscription});
       const ValidSubscription = allSubscription.filter((subscription) => {
         const totalDurationInMinutes =
           parseInt(subscription.startTime) + parseInt(subscription.endSub);
