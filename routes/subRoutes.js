@@ -8,13 +8,13 @@
 
 // module.exports = router;
 const express = require("express");
-const {getAuth} = require("firebase-admin/auth");
-const {getDatabase, ref} = require("firebase-admin/database");
+const { getAuth } = require("firebase-admin/auth");
+const { getDatabase, ref } = require("firebase-admin/database");
 var admin = require("firebase-admin");
 const token = require("@solana/spl-token");
 const web3 = require("@solana/web3.js");
 const cron = require("node-cron");
-const {initializeKeypair} = require("../intializeKeypair");
+const { initializeKeypair } = require("../intializeKeypair");
 const {
   createSub,
   getSub,
@@ -30,14 +30,14 @@ const {
   toMetaplexFile,
   findMetadataPda,
 } = require("@metaplex-foundation/js");
-const {PublicKey} = require("@solana/web3.js");
+const { PublicKey } = require("@solana/web3.js");
 const {
   createCreateMetadataAccountV2Instruction,
 } = require("@metaplex-foundation/mpl-token-metadata");
 const fs = require("fs");
 
 const Sub = require("../models/subModel");
-const {createECSensorTokenForUser} = require("../utils/generateToken");
+const { createECSensorTokenForUser } = require("../utils/generateToken");
 
 // const router = express.Router();
 
@@ -86,7 +86,7 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const {uri} = await metaplex.nfts().uploadMetadata({
+      const { uri } = await metaplex.nfts().uploadMetadata({
         name: "Fahrenheit Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
@@ -132,7 +132,7 @@ module.exports = function (io) {
       //   [user]
       // );
     } catch (e) {
-      console.log({e});
+      console.log({ e });
     }
   };
   const setUpECRLToken = async (data, ecSensor) => {
@@ -173,7 +173,7 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const {uri} = await metaplex.nfts().uploadMetadata({
+      const { uri } = await metaplex.nfts().uploadMetadata({
         name: "EC Sensor Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
@@ -219,7 +219,7 @@ module.exports = function (io) {
       //   [user]
       // );
     } catch (e) {
-      console.log({e});
+      console.log({ e });
     }
   };
   const setUpWARLToken = async (data, waterlevel) => {
@@ -260,7 +260,7 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const {uri} = await metaplex.nfts().uploadMetadata({
+      const { uri } = await metaplex.nfts().uploadMetadata({
         name: "Water level Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
@@ -306,7 +306,7 @@ module.exports = function (io) {
       //   [user]
       // );
     } catch (e) {
-      console.log({e});
+      console.log({ e });
     }
   };
   const setUpHDRLToken = async (data, humidity) => {
@@ -348,7 +348,7 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const {uri} = await metaplex.nfts().uploadMetadata({
+      const { uri } = await metaplex.nfts().uploadMetadata({
         name: "HUMIDITY Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
@@ -397,7 +397,7 @@ module.exports = function (io) {
         [user]
       );
     } catch (e) {
-      console.log({e});
+      console.log({ e });
     }
   };
   const setUpPHRLToken = async (data, phVal) => {
@@ -440,7 +440,7 @@ module.exports = function (io) {
       const imageUri = await metaplex.storage().upload(file);
 
       // upload metadata and get metadata uri (off chain metadata)
-      const {uri} = await metaplex.nfts().uploadMetadata({
+      const { uri } = await metaplex.nfts().uploadMetadata({
         name: "PH Root Labs COIN",
         description: "for all workers of the world",
         image: imageUri,
@@ -484,7 +484,7 @@ module.exports = function (io) {
         [user]
       );
     } catch (e) {
-      console.log({e});
+      console.log({ e });
     }
   };
 
@@ -496,7 +496,7 @@ module.exports = function (io) {
     ecSensor,
     waterlevel
   ) => {
-    console.log({data, temperature, humidity, phVal, ecSensor, waterlevel});
+    console.log({ data, temperature, humidity, phVal, ecSensor, waterlevel });
     console.log("START RUNNING");
     await setUpFDRLToken(data, temperature);
     await setUpHDRLToken(data, humidity);
@@ -537,7 +537,7 @@ module.exports = function (io) {
       if (ValidSubscription.length > 0) {
         await Promise.all(
           ValidSubscription.map(async (data) => {
-            const {temperature, humidity, phVal, date, ecSensor, waterlevel} =
+            const { temperature, humidity, phVal, date, ecSensor, waterlevel } =
               await findUserReadings(data.MacAddress);
             const dateConv = new Date(date);
             const secondsConv = dateConv.getTime() / 1000; // seconds
@@ -559,13 +559,13 @@ module.exports = function (io) {
                 let active =
                   currentTimeInMinutes > totalDurationInMinutes ? false : true;
                 const newData = await Sub.findById(data._id);
-                console.log({newData});
+                console.log({ newData });
                 if (ecSensor && !newData.ECRL) {
                   console.log("MAKE WAY FOR ECSENSOR, ");
                   const createdNewToken = await createECSensorTokenForUser(
                     data.walletKey
                   );
-                  console.log({createdNewToken}, "VREATED");
+                  console.log({ createdNewToken }, "VREATED");
                   await Sub.findByIdAndUpdate(data._id, {
                     ...createdNewToken,
                   });
@@ -643,7 +643,7 @@ module.exports = function (io) {
                     "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed"
                   );
                   io.emit("success", {
-                    data: {temperature, humidity, phVal},
+                    data: { temperature, humidity, phVal },
                     status: true,
                   });
                 }
@@ -651,7 +651,7 @@ module.exports = function (io) {
                 return;
               }
             } else {
-              console.log("dont run", {email: data.email});
+              console.log("dont run", { email: data.email });
             }
           })
         );
@@ -659,11 +659,11 @@ module.exports = function (io) {
         return;
       }
     } catch (e) {
-      console.log({e});
+      console.log({ e });
     }
   };
 
-  cron.schedule("* * * * *", checkUserData);
+  // cron.schedule("* * * * *", checkUserData);
 
   return router;
 };
