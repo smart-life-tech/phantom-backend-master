@@ -42,8 +42,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
+  console.log({ email, password });
   const user = await User.findOne({ email });
+  console.log({ user });
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
@@ -112,11 +113,26 @@ const submitOrderNumber = asyncHandler(async (req, res) => {
   }
 });
 
-const getAllOrders = asyncHandler(async (req, res) => {
+const getAllUserOrders = asyncHandler(async (req, res) => {
   try {
     const user = checkToken(req.headers.authorization.split(" ")[1]);
     if (user) {
       const orders = await Order.find({ userId: user.id });
+      if (orders) {
+        res.status(200).json(orders);
+      }
+    } else {
+      console.log("wrong JWT");
+    }
+  } catch (e) {
+    console.log({ e });
+  }
+});
+const getAllOrders = asyncHandler(async (req, res) => {
+  try {
+    const user = checkToken(req.headers.authorization.split(" ")[1]);
+    if (user) {
+      const orders = await Order.find();
       if (orders) {
         res.status(200).json(orders);
       }
@@ -134,4 +150,5 @@ module.exports = {
   updateUser,
   submitOrderNumber,
   getAllOrders,
+  getAllUserOrders,
 };
