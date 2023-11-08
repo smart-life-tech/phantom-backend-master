@@ -87,7 +87,7 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 const submitOrderNumber = asyncHandler(async (req, res) => {
-  const { orderNumber, orderEmail, orderPlatform, userId } = req.body;
+  const { orderNumber, orderEmail, orderPlatform, userId, email } = req.body;
   const orderExists = await Order.findOne({ orderEmail });
 
   if (orderExists) {
@@ -99,6 +99,7 @@ const submitOrderNumber = asyncHandler(async (req, res) => {
     orderEmail,
     orderPlatform,
     userId,
+    email,
   });
   if (order) {
     res.status(201).json({
