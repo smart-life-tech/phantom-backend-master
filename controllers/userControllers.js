@@ -4,6 +4,7 @@ const { generateToken, checkToken } = require("../utils/generateToken");
 const Order = require("../models/orderModel");
 
 const registerUser = asyncHandler(async (req, res) => {
+
   const { name, email, password, secretKey, pic } = req.body;
 
   console.log({ name, email, secretKey, password });
@@ -16,6 +17,7 @@ const registerUser = asyncHandler(async (req, res) => {
   let isAdmin = false;
   if (secretKey && secretKey === process.env.JWT_SECRETE) {
     isAdmin = true;
+
   }
   const user = await User.create({
     name,
@@ -24,6 +26,7 @@ const registerUser = asyncHandler(async (req, res) => {
     isAdmin,
   });
   console.log({ user });
+
   if (user) {
     res.status(201).json({
       _id: user._id,
@@ -41,10 +44,12 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const authUser = asyncHandler(async (req, res) => {
+
   const { email, password } = req.body;
   console.log({ email, password });
   const user = await User.findOne({ email });
   console.log({ user });
+
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
@@ -61,13 +66,16 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
+
   const { email, key } = req.body;
 
   const user = await User.findOne({ email });
+
   if (!user) {
     res.status(400);
     throw new Error("User does not exists");
   }
+
 
   const user1 = await User.updateOne(
     { _id: user._id },
@@ -85,6 +93,7 @@ const updateUser = asyncHandler(async (req, res) => {
     });
   }
 });
+
 
 const submitOrderNumber = asyncHandler(async (req, res) => {
   const { orderNumber, orderEmail, orderPlatform, userId, email } = req.body;
@@ -153,3 +162,4 @@ module.exports = {
   getAllOrders,
   getAllUserOrders,
 };
+

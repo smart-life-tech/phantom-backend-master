@@ -99,7 +99,6 @@ const getSub = asyncHandler(async (req, res) => {
       const latestReading = readings[readings.length - 1]
         ? readings[readings.length - 1].toObject()
         : null;
-      console.log("UPDATING");
       if (latestReading) {
         const updateMac = await User.findByIdAndUpdate(
           user.id,
@@ -108,23 +107,23 @@ const getSub = asyncHandler(async (req, res) => {
           },
           {new: true}
         );
-        console.log({updateMac, userInfo});
         const subInfo = await Sub.findOne({email: userInfo.email});
-        console.log({subInfo});
-        await Sub.findByIdAndUpdate(
-          subInfo.id,
-          {
-            MacAddress: IP,
-          },
-          {new: true}
-        );
+        if (subInfo) {
+          await Sub.findByIdAndUpdate(
+            subInfo.id,
+            {
+              MacAddress: IP,
+            },
+            {new: true}
+          );
+        }
         res.json({
           reading: latestReading,
           status: true,
         });
       } else {
         res.json({
-          message: "not found",
+          message: "no user found",
           status: false,
         });
       }
@@ -155,13 +154,18 @@ const findUserReadings = async (MacAddress, val = false) => {
       const latestReading = readings[readings.length - 1]
         ? readings[readings.length - 1].toObject()
         : readings[readings.length - 1];
-      console.log({latestReading});
       const {
         temperature,
         humidity,
         phVal,
         ph1,
         ph2,
+        timer1,
+        timer2,
+        timer3,
+        pump1,
+        pump2,
+        pump3,
         water,
         ecSensor,
         waterlevel,
@@ -173,6 +177,12 @@ const findUserReadings = async (MacAddress, val = false) => {
         phVal,
         ph1,
         ph2,
+        timer1,
+        timer2,
+        timer3,
+        pump1,
+        pump2,
+        pump3,
         water,
         ecSensor,
         waterlevel,
@@ -190,6 +200,7 @@ const getLatestSubData = asyncHandler(async (req, res) => {
 
   if (userInfo.MacAddress) {
     const sub = await Sub.findOne({email: userInfo.email});
+    const resData = await findUserReadings(userInfo.MacAddress);
     if (sub) {
       res.json({
         tempToken: sub.FDRLAccountInfo,
@@ -206,6 +217,7 @@ const getLatestSubData = asyncHandler(async (req, res) => {
         waterValues: sub.waterValues,
         tempValues: sub.tempValues,
         humidValues: sub.humidValues,
+        ...resData,
       });
     } else {
       res.json({
@@ -222,9 +234,12 @@ const getLatestSubData = asyncHandler(async (req, res) => {
 });
 
 const getDataInfo = asyncHandler(async (req, res) => {
+  console.log("get data info");
   const user = checkToken(req.headers.authorization.split(" ")[1]);
   const userInfo = await User.findById(user.id);
+
   const findUserData = await findUserReadings(userInfo.MacAddress);
+
   if (userInfo) {
     res.json({
       data: {MacAddress: userInfo.MacAddress, _id: userInfo._id},
