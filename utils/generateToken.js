@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 const web3 = require("@solana/web3.js");
 const token = require("@solana/spl-token");
-const {PublicKey} = require("@solana/web3.js");
-const {initializeKeypair} = require("../intializeKeypair");
+const { PublicKey } = require("@solana/web3.js");
+const { initializeKeypair } = require("../intializeKeypair");
 const generateToken = (id) => {
-  return jwt.sign({id}, process.env.JWT_SECRETE, {
+  return jwt.sign({ id }, process.env.JWT_SECRETE, {
     expiresIn: "30d",
   });
 };
@@ -42,7 +42,7 @@ const createCustomTokenForUser = async (address) => {
 
     const decimals = 4;
     const myAddress = new PublicKey(address);
-    console.log({myAddress, user, decimals}, user.publicKey);
+    console.log({ myAddress, user, decimals }, user.publicKey);
     // const owner = user.publicKey;
 
     const HDRL = await token.createMint(
@@ -66,7 +66,7 @@ const createCustomTokenForUser = async (address) => {
       user.publicKey,
       decimals
     );
-    console.log({HDRL});
+    console.log({ HDRL });
     const newHDRLAccount = await token.createAssociatedTokenAccount(
       connection,
       user,
@@ -86,7 +86,7 @@ const createCustomTokenForUser = async (address) => {
       myAddress
     );
 
-    console.log({newHDRLAccount});
+    console.log({ newHDRLAccount });
     const HDRLAccountInfo = await token.getAccount(connection, newHDRLAccount);
     const FDRLAccountInfo = await token.getAccount(connection, newFDRLAccount);
     const PHRLAccountInfo = await token.getAccount(connection, newPHRLAccount);
@@ -108,7 +108,7 @@ const createCustomTokenForUser = async (address) => {
       PHRL: PHRL.toBase58(),
     };
   } catch (error) {
-    console.log({error});
+    console.log({ error });
   }
 };
 const createECSensorTokenForUser = async (address) => {
@@ -121,7 +121,7 @@ const createECSensorTokenForUser = async (address) => {
 
     const decimals = 4;
     const myAddress = new PublicKey(address);
-    console.log({myAddress, user, decimals}, user.publicKey);
+    console.log({ myAddress, user, decimals }, user.publicKey);
     // const owner = user.publicKey;
 
     const ECRL = await token.createMint(
@@ -166,18 +166,18 @@ const createECSensorTokenForUser = async (address) => {
       WARL: WARL.toBase58(),
     };
   } catch (error) {
-    console.log({error});
+    console.log({ error });
   }
 };
 
 const changeFrequencyTodays = (interval) => {
-  console.log({interval});
+  console.log({ interval });
   let date = new Date();
   const startTime = date.getTime() / 60000;
   let nextTime = startTime + interval;
   const days = 60;
   let endSub = days * 24 * 60;
-  return {startTime, nextTime, endSub};
+  return { startTime, nextTime, endSub };
 };
 
 module.exports = {

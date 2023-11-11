@@ -1,23 +1,26 @@
-const express = require("express")
-const notes = require("./data/notes")
+const express = require("express");
+const notes = require("./data/notes");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const userRoutes = require("./routes/userRoutes")
-const subRoutes = require("./routes/subRoutes")
-const path = require("path")
-const cors = require('cors')
+const userRoutes = require("./routes/userRoutes");
+const subRoutes = require("./routes/subRoutes");
+const path = require("path");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 dotenv.config();
 connectDB();
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
+mongoose.set("strictQuery", false);
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 // app.use(cors())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use(cors({
-    origin: '*',
+app.use(
+  cors({
+    origin: "*",
     // origin: function (origin, callback) {
     //   if (whitelist.indexOf(origin) !== -1) {
     //     callback(null, true)
@@ -25,21 +28,19 @@ app.use(cors({
     //     callback(new Error('Not allowed by CORS'))
     //   }
     // },
-    methods:['GET','PUT','POST','DELETE'],
-    credentials: true
-}
-))
+    methods: ["GET", "PUT", "POST", "DELETE"],
+    credentials: true,
+  })
+);
 
-
-
-app.get("/", (req,res) => {
-  res.send("App is running")
-})
+app.get("/", (req, res) => {
+  res.send("App is running");
+});
 
 app.get("/api/notes", (req, res) => {
   res.json(notes);
-})
-app.use("/api/users", userRoutes)
+});
+app.use("/api/users", userRoutes);
 // app.use("/api/sub", subRoutes)
 
 //-------------------------------Deployment-----------------------------------------------
@@ -55,16 +56,14 @@ app.use("/api/users", userRoutes)
 
 //-------------------------------Deployment----------------------------------------------
 
+const PORT = process.env.PORT || 7001;
+let Server = app.listen(PORT, console.log(`Sever started on port ${PORT}`));
 
-const PORT = process.env.PORT ||  5000;
-let Server =app.listen(PORT, console.log(`Sever started on port ${PORT}`))
-
-
-let io = (require("socket.io"))(Server, {
+let io = require("socket.io")(Server, {
   cors: {
-    origin: '*',
-  }
-})
+    origin: "*",
+  },
+});
 
-app.use("/api/users", userRoutes)
-app.use("/api/sub", subRoutes(io))
+app.use("/api/users", userRoutes);
+app.use("/api/sub", subRoutes(io));
