@@ -149,6 +149,29 @@ const getAllOrders = asyncHandler(async (req, res) => {
     console.log({ e });
   }
 });
+const updateOrder = asyncHandler(async (req, res) => {
+  try {
+    const user = checkToken(req.headers.authorization.split(" ")[1]);
+    console.log({ user, body: req.body });
+    if (user) {
+      const order = await Order.findById(req.body.orderID);
+      if (order) {
+        const order1 = await Order.updateOne(
+          { _id: order._id },
+          { $set: { status: req.body.status, category: req.body.category } }
+        );
+        if (order1) {
+          res.status(200).json({
+            status: true,
+            message: "successfully updated the user page with order",
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.log({ e });
+  }
+});
 
 module.exports = {
   registerUser,
@@ -157,4 +180,5 @@ module.exports = {
   submitOrderNumber,
   getAllOrders,
   getAllUserOrders,
+  updateOrder,
 };

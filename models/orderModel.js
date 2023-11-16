@@ -16,6 +16,12 @@ const orderSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+    },
+    category: {
+      type: String,
+    },
     userId: {
       type: String,
       required: true,
