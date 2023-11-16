@@ -4,7 +4,6 @@ const { generateToken, checkToken } = require("../utils/generateToken");
 const Order = require("../models/orderModel");
 
 const registerUser = asyncHandler(async (req, res) => {
-
   const { name, email, password, secretKey, pic } = req.body;
 
   console.log({ name, email, secretKey, password });
@@ -17,7 +16,6 @@ const registerUser = asyncHandler(async (req, res) => {
   let isAdmin = false;
   if (secretKey && secretKey === process.env.JWT_SECRETE) {
     isAdmin = true;
-
   }
   const user = await User.create({
     name,
@@ -44,7 +42,6 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const authUser = asyncHandler(async (req, res) => {
-
   const { email, password } = req.body;
   console.log({ email, password });
   const user = await User.findOne({ email });
@@ -66,7 +63,6 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-
   const { email, key } = req.body;
 
   const user = await User.findOne({ email });
@@ -75,7 +71,6 @@ const updateUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("User does not exists");
   }
-
 
   const user1 = await User.updateOne(
     { _id: user._id },
@@ -94,14 +89,15 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
-
 const submitOrderNumber = asyncHandler(async (req, res) => {
   const { orderNumber, orderEmail, orderPlatform, userId, email } = req.body;
-  const orderExists = await Order.findOne({ orderEmail });
+  const orderExists = await Order.findOne({ orderNumber });
 
   if (orderExists) {
-    res.status(400);
-    throw new Error("order exists");
+    res.status(400).json({
+      status: false,
+      message: "Order Number Already Exists",
+    });
   }
   const order = await Order.create({
     orderNumber,
@@ -162,4 +158,3 @@ module.exports = {
   getAllOrders,
   getAllUserOrders,
 };
-
