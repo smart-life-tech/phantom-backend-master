@@ -92,7 +92,6 @@ module.exports = function (io) {
         image: imageUri,
       });
 
-      console.log("STILL RUNNING");
       // get metadata account address
       const metadataPDA = await findMetadataPda(FDRLPubKey);
 
@@ -321,12 +320,9 @@ module.exports = function (io) {
     humidity,
     phVal
   ) => {
-
-    console.log("START RUNNING");
     await setUpFDRLToken(data, temperature);
     await setUpHDRLToken(data, humidity);
     await setUpPHRLToken(data, phVal);
-    console.log("RAN ALL");
     return "completed";
   };
 
@@ -337,8 +333,7 @@ module.exports = function (io) {
         const totalDurationInMinutes =
           parseInt(subscription.startTime) + parseInt(subscription.endSub);
         const date = new Date();
-        const currentTimeInMinutes = date.getTime() / 60000; //minutes
-        console.log({currentTimeInMinutes, totalDurationInMinutes});
+        const currentTimeInMinutes = date.getTime() / 60000;
         if (
           totalDurationInMinutes > currentTimeInMinutes &&
           subscription.hasActiveSub
@@ -350,7 +345,6 @@ module.exports = function (io) {
             subscription.nextTime <= parseInt(currentTimeInMinutes) &&
             subscription.hasActiveSub
           ) {
-            console.log("yes");
             return subscription;
           }
         } else {
@@ -368,115 +362,122 @@ module.exports = function (io) {
             const currentTimeInSeconds = parseInt(new Date().getTime() / 1000);
             const dateDiff = currentTimeInSeconds - parseInt(secondsConv);
             const maxDateDiff = 3 * 60 * 60;
-            if (dateDiff < maxDateDiff) {
-              if (temperature) {
-                let date = new Date();
-                let currentTimeInMinutes = Math.round(
-                  date.getTime() / (1000 * 60)
-                );
 
-                const nextFrequencyData =
-                  currentTimeInMinutes + parseInt(data.subRatePerMin);
-                const totalDurationInMinutes =
-                  parseInt(data.startTime) + parseInt(data.endSub);
+            if (typeof temperature === "number" && !isNaN(temperature)) {
+              let date = new Date();
+              let currentTimeInMinutes = Math.round(
+                date.getTime() / (1000 * 60)
+              );
 
-                let active =
-                  currentTimeInMinutes > totalDurationInMinutes ? false : true;
-                const newData = await Sub.findById(data._id);
-                console.log({ newData });
+              const nextFrequencyData =
+                currentTimeInMinutes + parseInt(data.subRatePerMin);
+              const totalDurationInMinutes =
+                parseInt(data.startTime) + parseInt(data.endSub);
+
+              let active =
+                currentTimeInMinutes > totalDurationInMinutes ? false : true;
+              const newData = await Sub.findById(data._id);
+              if (newData?.tempValues?.length > 15) {
+                const newDataReadings = {
+                  hasActiveSub: active,
+                  noOfTransaction: data.noOfTransaction + 1,
+                  nextTime: `${nextFrequencyData}`,
+                  tempValues: [
+                    ...newData.tempValues.slice(newData.tempValues.length - 15),
+                    `${temperature}`,
+                  ],
+                  phValues: [
+                    ...newData.phValues.slice(newData.phValues.length - 15),
+                    phVal,
+                  ],
+                  humidValues: [
+                    ...newData.humidValues.slice(newData.phValues.length - 15),
+                    `${humidity}`,
+                  ],
+                  time: [
+                    ...newData.time.slice(newData.time.length - 15),
+                    `${new Date().getTime()}`,
+                  ],
+                };
+                await Sub.findByIdAndUpdate(data._id, newDataReadings);
+              } else {
+                await Sub.findByIdAndUpdate(data._id, {
+                  hasActiveSub: active,
+                  noOfTransaction: data.noOfTransaction + 1,
+                  nextTime: `${nextFrequencyData}`,
+                  $push: {
+                    tempValues: `${temperature}`, // Add value to array1
+                    phValues: `${phVal}`, // Add value to array2
+                    humidValues: `${humidity}`, // Add value to array3
+                    time: `${new Date().getTime()}`,
+                  },
+                });
+              }
+              if (newData?.ecValues?.length > 15) {
+                await Sub.findByIdAndUpdate(data._id, {
+                  ecValues: [
+                    ...newData.ecValues.slice(newData.ecValues.length - 15),
+                    `${ecSensor}`,
+                  ],
+                  waterValues: [
+                    ...newData.waterValues.slice(
+                      newData.waterValues.length - 15
+                    ),
+                    `${waterlevel}`,
+                  ],
+                });
+              } else {
+                await Sub.findByIdAndUpdate(data._id, {
+                  $push: {
+                    ecValues: `${ecSensor}`, // Add value to array1
+                    waterValues: `${waterlevel}`,
+                  },
+                });
+              }
+              io.emit("success", {
+                data: {
+                  temperature,
+                  humidity,
+                  phVal,
+                  ecSensor,
+                  waterlevel,
+                },
+
+                status: true,
+              });
+
+              if (dateDiff < maxDateDiff) {
                 if (ecSensor && !newData.ECRL) {
-                  console.log("MAKE WAY FOR ECSENSOR, ");
                   const createdNewToken = await createECSensorTokenForUser(
                     data.walletKey
                   );
-                  console.log({ createdNewToken }, "VREATED");
                   await Sub.findByIdAndUpdate(data._id, {
                     ...createdNewToken,
                   });
                 }
-                if (newData?.tempValues?.length > 15) {
-                  await Sub.findByIdAndUpdate(data._id, {
-                    hasActiveSub: active,
-                    noOfTransaction: data.noOfTransaction + 1,
-                    nextTime: `${nextFrequencyData}`,
-                    tempValues: [
-                      ...newData.tempValues.slice(
-                        newData.tempValues.length - 15
-                      ),
-                      `${temperature}`,
-                    ],
-                    phValues: [
-                      ...newData.phValues.slice(newData.phValues.length - 15),
-                      phVal,
-                    ],
-                    humidValues: [
-                      ...newData.humidValues.slice(
-                        newData.phValues.length - 15
-                      ),
-                      `${humidity}`,
-                    ],
-                    time: [
-                      ...newData.time.slice(newData.time.length - 15),
-                      `${new Date().getTime()}`,
-                    ],
-                  });
-                } else {
-                  await Sub.findByIdAndUpdate(data._id, {
-                    hasActiveSub: active,
-                    noOfTransaction: data.noOfTransaction + 1,
-                    nextTime: `${nextFrequencyData}`,
-                    $push: {
-                      tempValues: `${temperature}`, // Add value to array1
-                      phValues: `${phVal}`, // Add value to array2
-                      humidValues: `${humidity}`, // Add value to array3
-                      time: `${new Date().getTime()}`,
-                    },
-                  });
-                }
-                if (newData?.ecValues?.length > 15) {
-                  await Sub.findByIdAndUpdate(data._id, {
-                    ecValues: [
-                      ...newData.ecValues.slice(newData.ecValues.length - 15),
-                      `${ecSensor}`,
-                    ],
-                    waterValues: [
-                      ...newData.waterValues.slice(
-                        newData.waterValues.length - 15
-                      ),
-                      `${waterlevel}`,
-                    ],
-                  });
-                } else {
-                  await Sub.findByIdAndUpdate(data._id, {
-                    $push: {
-                      ecValues: `${ecSensor}`, // Add value to array1
-                      waterValues: `${waterlevel}`,
-                    },
-                  });
-                }
-                console.log("Hellol neieije jeiie");
-                const result = await runBlockchainTransaction(
-                  data,
-                  temperature,
-                  humidity,
-                  phVal
-                );
-                if (result === "completed") {
-                  console.log(
-                    "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed"
-                  );
-                  io.emit("success", {
+                // const result = await runBlockchainTransaction(
+                //   data,
+                //   temperature,
+                //   humidity,
+                //   phVal
+                // );
 
-                    data: {temperature, humidity, phVal, ecSensor, waterlevel},
+                if (result === "completed") {
+                  io.emit("success", {
+                    data: {
+                      temperature,
+                      humidity,
+                      phVal,
+                      ecSensor,
+                      waterlevel,
+                    },
 
                     status: true,
                   });
+                } else {
+                  return;
                 }
-              } else {
-                return;
               }
-            } else {
-              console.log("dont run", { email: data.email });
             }
           })
         );
@@ -488,7 +489,7 @@ module.exports = function (io) {
     }
   };
 
-  cron.schedule("* * * * */10", checkUserData);
+  cron.schedule("* * * * *", checkUserData);
 
   return router;
 };
