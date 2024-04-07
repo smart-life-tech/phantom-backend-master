@@ -362,8 +362,17 @@ module.exports = function (io) {
             const currentTimeInSeconds = parseInt(new Date().getTime() / 1000);
             const dateDiff = currentTimeInSeconds - parseInt(secondsConv);
             const maxDateDiff = 3 * 60 * 60;
-
-            if (temperature) {
+            console.log({
+              temperature,
+              humidity,
+              phVal,
+              date,
+              ecSensor,
+              waterlevel,
+              mac: data.MacAddress,
+              email: data.email,
+            });
+            if (typeof temperature === "number" && !isNaN(temperature)) {
               let date = new Date();
               let currentTimeInMinutes = Math.round(
                 date.getTime() / (1000 * 60)
@@ -377,9 +386,9 @@ module.exports = function (io) {
               let active =
                 currentTimeInMinutes > totalDurationInMinutes ? false : true;
               const newData = await Sub.findById(data._id);
-
+              console.log({ newData });
               if (newData?.tempValues?.length > 15) {
-                await Sub.findByIdAndUpdate(data._id, {
+                const newDataReadings = {
                   hasActiveSub: active,
                   noOfTransaction: data.noOfTransaction + 1,
                   nextTime: `${nextFrequencyData}`,
@@ -399,7 +408,10 @@ module.exports = function (io) {
                     ...newData.time.slice(newData.time.length - 15),
                     `${new Date().getTime()}`,
                   ],
-                });
+                };
+                console.log({ newDataReadings });
+                await Sub.findByIdAndUpdate(data._id, newDataReadings);
+                console.log("updading...........!!!!!!!!!!!!!!!!!!!!!");
               } else {
                 await Sub.findByIdAndUpdate(data._id, {
                   hasActiveSub: active,
@@ -463,12 +475,12 @@ module.exports = function (io) {
                   });
                 }
                 console.log("Hellol neieije jeiie");
-                const result = await runBlockchainTransaction(
-                  data,
-                  temperature,
-                  humidity,
-                  phVal
-                );
+                // const result = await runBlockchainTransaction(
+                //   data,
+                //   temperature,
+                //   humidity,
+                //   phVal
+                // );
 
                 if (result === "completed") {
                   console.log(
@@ -500,7 +512,7 @@ module.exports = function (io) {
     }
   };
 
-  cron.schedule("* * * * */5", checkUserData);
+  cron.schedule("* * * * *", checkUserData);
 
   return router;
 };
