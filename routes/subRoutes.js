@@ -489,7 +489,7 @@ module.exports = function (io) {
     }
   };
 
-  cron.schedule("* * * * *", checkUserData);
+  cron.schedule("* * * * */5", checkUserData);
 
   return router;
 };
