@@ -362,16 +362,7 @@ module.exports = function (io) {
             const currentTimeInSeconds = parseInt(new Date().getTime() / 1000);
             const dateDiff = currentTimeInSeconds - parseInt(secondsConv);
             const maxDateDiff = 3 * 60 * 60;
-            console.log({
-              temperature,
-              humidity,
-              phVal,
-              date,
-              ecSensor,
-              waterlevel,
-              mac: data.MacAddress,
-              email: data.email,
-            });
+
             if (typeof temperature === "number" && !isNaN(temperature)) {
               let date = new Date();
               let currentTimeInMinutes = Math.round(
@@ -386,7 +377,6 @@ module.exports = function (io) {
               let active =
                 currentTimeInMinutes > totalDurationInMinutes ? false : true;
               const newData = await Sub.findById(data._id);
-              console.log({ newData });
               if (newData?.tempValues?.length > 15) {
                 const newDataReadings = {
                   hasActiveSub: active,
@@ -409,9 +399,7 @@ module.exports = function (io) {
                     `${new Date().getTime()}`,
                   ],
                 };
-                console.log({ newDataReadings });
                 await Sub.findByIdAndUpdate(data._id, newDataReadings);
-                console.log("updading...........!!!!!!!!!!!!!!!!!!!!!");
               } else {
                 await Sub.findByIdAndUpdate(data._id, {
                   hasActiveSub: active,
@@ -446,13 +434,6 @@ module.exports = function (io) {
                   },
                 });
               }
-              console.log({
-                temperature,
-                humidity,
-                phVal,
-                ecSensor,
-                waterlevel,
-              });
               io.emit("success", {
                 data: {
                   temperature,
@@ -474,7 +455,6 @@ module.exports = function (io) {
                     ...createdNewToken,
                   });
                 }
-                console.log("Hellol neieije jeiie");
                 // const result = await runBlockchainTransaction(
                 //   data,
                 //   temperature,
@@ -483,9 +463,6 @@ module.exports = function (io) {
                 // );
 
                 if (result === "completed") {
-                  console.log(
-                    "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj completed"
-                  );
                   io.emit("success", {
                     data: {
                       temperature,
